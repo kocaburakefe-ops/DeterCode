@@ -1,1 +1,25 @@
+// DeterCode: Zindan Macerası v1.0
+yazdir "--- DETERCODE ZİNDANINA HOŞ GELDİN ---"
+yazdir "Karanlık koridorda ilerlerken önüne bir sandık çıktı."
 
+secim = sor "Sandığı açmak ister misin? (evet/hayir):"
+
+EGER secim == "evet"
+yazdir "Sandığı dikkatlice açıyorsun..."
+
+// Sandıktan ne çıkacağı tamamen şans (1: Tuzak, 2: Boş, 3: İksir)
+sans = sansli_sayi 1 3
+
+EGER secim == "evet" VE sans == 1
+yazdir "TUZAK! Sandıktan fırlayan ok canını yaktı. -20 Can!"
+
+EGER secim == "evet" VE sans == 2
+yazdir "Sandık boş çıktı kanka, şansına küs."
+
+EGER secim == "evet" VE sans == 3
+yazdir "MÜKEMMEL! Sandıktan şifa iksiri buldun. +20 Can!"
+
+EGER secim == "hayir"
+yazdir "Garantici davrandın ve sandığa dokunmadan ilerledin..."
+
+yazdir "Macera burada bitiyor. DeterCode tıkır tıkır çalıştı!"
