@@ -1,4 +1,6 @@
 import sys
+import random
+import os # Ekranı temizlemek için işletim sistemi komutlarını motora dahil ediyoruz
 
 class DeterEngine:
     def __init__(self):
@@ -23,11 +25,9 @@ class DeterEngine:
                     self.i += 2
                     continue
 
-                # --- Gelişmiş EĞER MANTIĞI (VE / VEYA Desteği) ---
+                # --- EĞER MANTIĞI ---
                 if satir.startswith("EGER"):
                     sart = satir.replace("EGER", "").strip()
-                    
-                    # Türkçe operatörleri Python'ın anlayacağı dile çeviriyoruz
                     sart = sart.replace(" VE ", " and ").replace(" VEYA ", " or ")
                     
                     for var in self.hafiza:
@@ -51,6 +51,12 @@ class DeterEngine:
             print(f"DETER SİSTEM HATASI: {e}")
 
     def satir_isle(self, satir):
+        # --- YENİ: EKRAN TEMİZLEME KOMUTU ---
+        if satir == "ekrani_temizle":
+            # Windows için 'cls', telefonlar ve Linux için 'clear' komutunu çalıştırır
+            os.system('cls' if os.name == 'nt' else 'clear')
+            return
+
         # YAZDIRMA
         if satir.startswith("yazdir"):
             icerik = satir.replace("yazdir", "").strip()
@@ -63,10 +69,19 @@ class DeterEngine:
             mesaj = mesaj.strip().replace('"', '')
             self.degisken_kaydet(degisken, input(f"{mesaj} "))
 
-        # ATAMA VE MATEMATİK
+        # ATAMA, MATEMATİK VE ŞANS
         elif "=" in satir:
             degisken, deger = satir.split("=")
             degisken, deger = degisken.strip(), deger.strip()
+            
+            if "sansli_sayi" in deger:
+                parcalar = deger.split("sansli_sayi")[1].split()
+                min_deger = int(parcalar[0])
+                max_deger = int(parcalar[1])
+                rastgele_sonuc = random.randint(min_deger, max_deger)
+                self.degisken_kaydet(degisken, rastgele_sonuc)
+                return
+
             hesap = deger
             for var in self.hafiza:
                 if var in hesap:
@@ -81,7 +96,6 @@ class DeterEngine:
                 self.degisken_kaydet(degisken, deger.replace('"', ''))
 
     def degisken_kaydet(self, isim, deger):
-        # Sayı kontrolü (True/False boolean değerleri de desteklesin diye)
         if str(deger) in ["True", "False"]:
             tip = "MANTIK"
         else:
