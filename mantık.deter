@@ -1,1 +1,14 @@
+// DeterCode Çoklu Şart Testi
+seviye = 6
+anahtar = 1
 
+yazdir "Zindan Kapısına Geldin..."
+
+// Hem seviye 5'ten büyük olmalı VE anahtar 1 olmalı
+EGER seviye > 5 VE anahtar == 1
+yazdir "KAPI AÇILDI! İçeri giriyorsun kanka."
+
+// Şartlardan biri bozulursa ne olacak test et:
+seviye = 3
+EGER seviye > 5 VE anahtar == 1
+yazdir "Bu yazı ekrana gelmemeli çünkü seviyen yetersiz!"
