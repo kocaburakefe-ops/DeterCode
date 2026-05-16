@@ -1,0 +1,11 @@
+// DeterCode Ekran Temizleme ve Sahne Değişimi
+yazdir "Bu ekran eski sahne. Birazdan her şey silinecek..."
+yazdir "Devam etmek için bir tuşa basıp Enter'la kanka."
+
+bekle = sor ">>"
+
+ekrani_temizle
+
+yazdir "--- YENİ SAHNE ---"
+yazdir "Gördün mü? Eski kalabalıktan eser kalmadı, tertemiz!"
+  
