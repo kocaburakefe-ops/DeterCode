@@ -1,11 +1,13 @@
 import sys
 import random
-import os # Ekranı temizlemek için işletim sistemi komutlarını motora dahil ediyoruz
+import os
+import time # Zamanı yavaşlatmak, bekletmek için Python'ın time modülünü bağlıyoruz
 
 class DeterEngine:
     def __init__(self):
         self.hafiza = {}
         self.tipler = {}
+        self.torbalar = {}
 
     def calistir(self, dosya_yolu):
         try:
@@ -51,10 +53,38 @@ class DeterEngine:
             print(f"DETER SİSTEM HATASI: {e}")
 
     def satir_isle(self, satir):
-        # --- YENİ: EKRAN TEMİZLEME KOMUTU ---
+        # --- EKRAN TEMİZLEME ---
         if satir == "ekrani_temizle":
-            # Windows için 'cls', telefonlar ve Linux için 'clear' komutunu çalıştırır
             os.system('cls' if os.name == 'nt' else 'clear')
+            return
+
+        # --- YENİ: ZAMAN BEKLETME KOMUTU ---
+        # Örn: bekle 2 (Sistemi 2 saniye boyunca durdurur)
+        if satir.startswith("bekle"):
+            saniye = float(satir.split()[1])
+            time.sleep(saniye)
+            return
+
+        # --- TORBA (LİSTE) KOMUTLARI ---
+        if satir.startswith("torba_olustur"):
+            torba_adi = satir.split()[1]
+            self.torbalar[torba_adi] = []
+            return
+
+        elif satir.startswith("torbaya_at"):
+            parcalar = satir.split()
+            torba_adi = parcalar[1]
+            esya = " ".join(parcalar[2:]).replace('"', '')
+            if torba_adi in self.torbalar:
+                self.torbalar[torba_adi].append(esya)
+            else:
+                print(f"HATA: '{torba_adi}' adında bir torba yok kanka!")
+            return
+
+        elif satir.startswith("torbadan_goster"):
+            torba_adi = satir.split()[1]
+            if torba_adi in self.torbalar:
+                print(f"[{torba_adi.upper()} İÇERİĞİ]: {', '.join(self.torbalar[torba_adi])}")
             return
 
         # YAZDIRMA
