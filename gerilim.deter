@@ -1,1 +1,20 @@
+// DeterCode Zamanlama ve Sinematik Akış Testi
+ekrani_temizle
 
+yazdir "Karanlık odada yalnızsın..."
+bekle 1.5
+
+yazdir "Derinden bir tıkırtı sesi geldi..."
+bekle 2
+
+yazdir "Ses gitgide yaklaşıyor kanka!"
+bekle 1
+
+yazdir "3..."
+bekle 1
+yazdir "2..."
+bekle 1
+yazdir "1..."
+bekle 1
+
+yazdir "BOOOM! DeterCode v8.0 başarıyla yüklendi!"
