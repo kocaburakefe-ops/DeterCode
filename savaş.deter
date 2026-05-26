@@ -1,0 +1,21 @@
+// DeterCode Gelişmiş Savaş ve Şifa Testi
+ekrani_temizle
+
+oyuncu_can = 100
+yazdir "Savaşa Hazırlan! Canın:"
+yazdir oyuncu_can
+bekle 1
+
+yazdir "Düşman büyücü sana alev topu fırlattı! -30 Can"
+hasar_ver oyuncu_can 30
+
+yazdir "Kalan Canın:"
+yazdir oyuncu_can
+bekle 1.5
+
+yazdir "Çantandan hemen bir iksir içiyorsun! +45 Can"
+iyilestir oyuncu_can 45
+
+yazdir "Güncel Canın:"
+yazdir oyuncu_can
+  
