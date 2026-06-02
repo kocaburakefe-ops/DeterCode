@@ -1,0 +1,17 @@
+// DeterCode Ölümcül Tuzak Testi
+ekrani_temizle
+
+yazdir "Bir mayın tarlasına girdin kanka..."
+secim = sor "Hangi yöne basacaksın? (sol/sag):"
+
+EGER secim == "sol"
+yazdir "Güvendesin, burası temiz."
+
+EGER secim == "sag"
+yazdir "BOOOM! Mayına bastın!"
+
+EGER secim == "sag"
+oyunu_bitir
+
+yazdir "Sağ salim kurtuldun, maceraya devam ediyorsun!"
+  
