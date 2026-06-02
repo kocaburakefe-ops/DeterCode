@@ -58,13 +58,21 @@ class DeterEngine:
             os.system('cls' if os.name == 'nt' else 'clear')
             return
 
+        # --- YENİ: OYUNU BİTİR KOMUTU ---
+        if satir == "oyunu_bitir":
+            print("\n===============================")
+            print("       [ GAME OVER ]")
+            print("  DeterCode Oyunu Sona Erdi!")
+            print("===============================\n")
+            sys.exit()
+
         # --- ZAMAN BEKLETME ---
         if satir.startswith("bekle"):
             saniye = float(satir.split()[1])
             time.sleep(saniye)
             return
 
-        # --- YENİ: HASAR VER KOMUTU (Örn: hasar_ver can 20) ---
+        # --- HASAR VER ---
         if satir.startswith("hasar_ver"):
             parcalar = satir.split()
             degisken = parcalar[1]
@@ -75,7 +83,7 @@ class DeterEngine:
                 print(f"HATA: Hasar verilecek '{degisken}' bulunamadı kanka!")
             return
 
-        # --- YENİ: İYİLEŞTİR KOMUTU (Örn: iyilestir can 15) ---
+        # --- İYİLEŞTİR ---
         if satir.startswith("iyilestir"):
             parcalar = satir.split()
             degisken = parcalar[1]
@@ -127,8 +135,6 @@ class DeterEngine:
             
             if "sansli_sayi" in deger:
                 parcalar = deger.split("sansli_sayi")[1].split()
-                min_deger = int(parcalar[0])
-                max_deger = int(max_deger) # Düzeltme
                 min_deger, max_deger = int(parcalar[0]), int(parcalar[1])
                 rastgele_sonuc = random.randint(min_deger, max_deger)
                 self.degisken_kaydet(degisken, rastgele_sonuc)
