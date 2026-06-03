@@ -1,0 +1,16 @@
+// DeterCode v13.0 KENKEN Döngüsü ve Canavar Savaşı
+ekrani_temizle
+
+boss_can = 30
+yazdir "Zindanın Gardiyanı ejderha uyandı!"
+
+// boss_can 0'dan büyük olduğu SÜRECE bu döngü çalışacak:
+KENKEN boss_can > 0
+hasar_ver boss_can 10
+
+yazdir "Ejderhaya vurdun! Gardiyanın Kalan Canı:"
+yazdir boss_can
+bekle 1
+
+yazdir "TEBRİKLER! Gardiyanı alt ettin, zindan temizlendi!"
+  
