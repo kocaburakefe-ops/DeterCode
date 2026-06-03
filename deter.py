@@ -3,17 +3,18 @@ import random
 import os
 import time
 import re
+import importlib  # Python kütüphanelerini dinamik çalmak için ekledik!
 
 class DeterEngine:
     def __init__(self):
         self.hafiza = {}
         self.tipler = {}
         self.torbalar = {}
-        self.yetenekler = {}  # Fonksiyonları (Yetenekleri) tutan sözlük
+        self.yetenekler = {}
         self.satirlar_veri = []
         self.i = 0
+        self.dahil_edilenler = set() # Aynı dosyayı tekrar yüklememek için koruma
         
-        # Resmi Turkuaz ve Metalik Marka Renklerimiz
         self.renkler = {
             "KIRMIZI": "\033[91m",
             "YESIL": "\033[92m",
@@ -24,30 +25,25 @@ class DeterEngine:
         }
 
     def calistir(self, dosya_yolu):
+        # --- RESMİ LOGO AÇILIŞI ---
+        print(f"{self.renkler['TURKUAZ']}")
+        print("      ______   ______  ")
+        print("     |  __  \ /  ____| ")
+        print("     | |  |  |  /      ")
+        print("     | |  |  | |   _⚔️_ ")
+        print("     | |__|  |  \____| ")
+        print("     |______/ \______| ")
+        print("   [🔒 TYPE-LOCKED ENGINE v16.0]")
+        print(f"{self.renkler['SIFIRLA']}\n")
+
         try:
-            with open(dosya_yolu, "r", encoding="utf-8") as dosya:
-                kod_icerik = dosya.read()
+            self.kod_yukle_ve_tara(dosya_yolu)
             
-            # 1. ADIM: Ön İşleme (Yorum satırlarını temizle ve blokları analiz et)
-            temiz_kod = []
-            orijinal_satirlar = kod_icerik.splitlines()
-            
-            for idx, s in enumerate(orijinal_satirlar, 1):
-                s_temiz = s.strip()
-                if s_temiz and not s_temiz.startswith("//"):
-                    temiz_kod.append((s_temiz, idx))
-            
-            self.satirlar_veri = temiz_kod
-            
-            # 2. ADIM: Fonksiyonları (YETENEK) Önceden Tara ve Belleğe Al
-            self.yetenekleri_tara()
-            
-            # 3. ADIM: Ana Program Akışını Başlat
+            # Ana Program Akışını Başlat
             self.i = 0
             while self.i < len(self.satirlar_veri):
                 satir, satir_no = self.satirlar_veri[self.i]
                 
-                # Eğer bir yetenek tanımına denk gelirsek, içeriğini atla (çünkü çağrılınca çalışacak)
                 if satir.startswith("YETENEK"):
                     self.blok_atla("YETENEK_BITIR")
                     continue
@@ -58,7 +54,26 @@ class DeterEngine:
         except Exception as e:
             print(f"{self.renkler['KIRMIZI']}[DETER SİSTEM HATASI]: {e}{self.renkler['SIFIRLA']}")
 
+    def kod_yukle_ve_tara(self, dosya_yolu):
+        if dosya_yolu in self.dahil_edilenler:
+            return
+        self.dahil_edilenler.add(dosya_yolu)
+
+        with open(dosya_yolu, "r", encoding="utf-8") as dosya:
+            kod_icerik = dosya.read()
+        
+        yeni_satirlar = []
+        for idx, s in enumerate(kod_icerik.splitlines(), 1):
+            s_temiz = s.strip()
+            if s_temiz and not s_temiz.startswith("//"):
+                yeni_satirlar.append((s_temiz, idx))
+        
+        # Mevcut satırların üzerine ekle (Önce dahil edilenler yüklensin diye başa veya sıraya ekliyoruz)
+        self.satirlar_veri = yeni_satirlar + self.satirlar_veri
+        self.yetenekleri_tara()
+
     def yetenekleri_tara(self):
+        self.yetenekler = {} # Yeniden taramada sıfırla/güncelle
         idx = 0
         while idx < len(self.satirlar_veri):
             satir, satir_no = self.satirlar_veri[idx]
@@ -75,10 +90,6 @@ class DeterEngine:
                 while idx < len(self.satirlar_veri) and self.satirlar_veri[idx][0] != "YETENEK_BITIR":
                     govde.append(self.satirlar_veri[idx])
                     idx += 1
-                
-                if idx >= len(self.satirlar_veri):
-                    print(f"{self.renkler['KIRMIZI']}[SÖZDİZİM HATASI] (Satır {satir_no}): YETENEK bloğu kapatılmamış! (YETENEK_BITIR eksik){self.renkler['SIFIRLA']}")
-                    sys.exit()
                 
                 self.yetenekler[yetenek_adi] = govde
             idx += 1
@@ -100,7 +111,6 @@ class DeterEngine:
     def sart_degerlendir(self, sart, satir_no):
         sart = sart.replace(" VE ", " and ").replace(" VEYA ", " or ")
         
-        # HAS (Çanta Kontrolü) Mekanizması
         if " HAS " in sart:
             parcalar = sart.split(" HAS ")
             torba_adi = parcalar[0].strip()
@@ -109,7 +119,6 @@ class DeterEngine:
                 return aranan_esya in self.torbalar[torba_adi]
             return False
             
-        # Değişkenleri yerine koyma
         gecerli_sart = sart
         for var in sorted(self.hafiza.keys(), key=len, reverse=True):
             if var in gecerli_sart:
@@ -122,6 +131,39 @@ class DeterEngine:
             sys.exit()
 
     def satir_isle(self, satir, satir_no):
+        # --- 0. DAHİL_ET MEKANİZMASI (YENİ SAVAŞ SİLAHI) ---
+        if satir.startswith("DAHİL_ET"):
+            hedef = satir.replace("DAHİL_ET", "").strip()
+            
+            # Eğer .deter dosyasıysa sistem içine çeker
+            if hedef.endswith(".deter"):
+                if os.path.exists(hedef):
+                    # Mevcut akışı bozmadan yeni satırları araya enjekte eder
+                    with open(hedef, "r", encoding="utf-8") as f:
+                        ek_kod = f.read()
+                    ek_satirlar = []
+                    for e_idx, e_s in enumerate(ek_kod.splitlines(), 1):
+                        e_temiz = e_s.strip()
+                        if e_temiz and not e_temiz.startswith("//"):
+                            ek_satirlar.append((e_temiz, f"{hedef}:{e_idx}"))
+                    
+                    # Bulunduğumuz satırın hemen arkasına ekliyoruz kanka
+                    self.satirlar_veri = self.satirlar_veri[:self.i+1] + ek_satirlar + self.satirlar_veri[self.i+1:]
+                    self.yetenekleri_tara()
+                else:
+                    print(f"{self.renkler['KIRMIZI']}[BAĞLANTI HATASI] (Satır {satir_no}): '{hedef}' dosyası bulunamadı kanka!{self.renkler['SIFIRLA']}")
+                return
+            
+            # Eğer düz yazıysa Python kütüphanesi olarak çalmaya çalışır kanka!
+            else:
+                try:
+                    globals()[hedef] = importlib.import_module(hedef)
+                    renkli_yazdir_dahili = f"{self.renkler['MAVI']}[KÖPRÜ KURULDU]: Python '{hedef}' modülü içeri sızdırıldı.{self.renkler['SIFIRLA']}"
+                    print(renkli_yazdir_dahili)
+                except:
+                    print(f"{self.renkler['KIRMIZI']}[KÖPRÜ HATASI] (Satır {satir_no}): Python kütüphanesi '{hedef}' yüklenemedi!{self.renkler['SIFIRLA']}")
+                return
+
         # 1. HUD VE EKRAN KOMUTLARI
         if satir == "ekrani_temizle":
             os.system('cls' if os.name == 'nt' else 'clear')
@@ -141,7 +183,7 @@ class DeterEngine:
         if satir == "oyunu_bitir":
             print(f"\n{self.renkler['KIRMIZI']}===============================")
             print("       [ GAME OVER ]")
-            print("  DeterCode v15.0 Kapanıyor.")
+            print("  DeterCode v16.0 Kapanıyor.")
             print(f"===============================\n{self.renkler['SIFIRLA']}")
             sys.exit()
 
@@ -149,16 +191,14 @@ class DeterEngine:
             time.sleep(float(satir.split()[1]))
             return
 
-        # 2. Gelişmiş EGER / DEGİLSE_EGER / DEGİLSE Blok Yapısı
+        # 2. Gelişmiş EGER / DEGİLSE_EGER / DEGİLSE
         if satir.startswith("EGER"):
             sart = satir.replace("EGER", "").strip()
             sonuc = self.sart_degerlendir(sart, satir_no)
             
             if sonuc:
-                # Şart doğru, bir sonraki satıra geç ve çalıştır
                 return
             else:
-                # Şart yanlış, bir sonraki blok kırılımına kadar atla
                 self.i += 1
                 while self.i < len(self.satirlar_veri):
                     akt_satir, akt_no = self.satirlar_veri[self.i]
@@ -168,7 +208,7 @@ class DeterEngine:
                             return
                     elif akt_satir == "DEGİLSE":
                         return
-                    elif akt_satir == "BLOK_BITIR":
+                    elif akt_satir == "BLOK_BITIR" :
                         return
                     elif akt_satir.startswith("EGER") or akt_satir.startswith("KENKEN"):
                         self.blok_atla("BLOK_BITIR")
@@ -176,14 +216,13 @@ class DeterEngine:
                 return
 
         if satir.startswith("DEGİLSE_EGER") or satir == "DEGİLSE":
-            # Eğer halihazırda doğru bir bloğun içinden çıkıp buraya geldiysek, bloğun kalanını tamamen atla
             self.blok_atla("BLOK_BITIR")
             return
 
         if satir == "BLOK_BITIR":
             return
 
-        # 3. KENKEN (DÖNGÜ) MANTIĞI
+        # 3. KENKEN (DÖNGÜ)
         if satir.startswith("KENKEN"):
             sart = satir.replace("KENKEN", "").strip()
             baslangic_i = self.i
@@ -199,19 +238,19 @@ class DeterEngine:
             self.blok_atla("BLOK_BITIR")
             return
 
-        # 4. YETENEK ÇAĞIRMA (FONKSİYONLAR)
+        # 4. YETENEK ÇAĞIRMA
         if satir.startswith("yetenek_cagir"):
             y_adi = satir.split()[1]
             if y_adi in self.yetenekler:
                 eski_i = self.i
                 for g_satir, g_no in self.yetenekler[y_adi]:
                     self.satir_isle(g_satir, g_no)
-                self.i = eski_i
+                self.i = antiqu_i = eski_i
             else:
-                print(f"{self.renkler['KIRMIZI']}[MANTIKSAL HATA] (Satır {satir_no}): '{y_adi}' adında bir yetenek bulunamadı kanka!{self.renkler['SIFIRLA']}")
+                print(f"{self.renkler['KIRMIZI']}[MANTIKSAL HATA] (Satır {satir_no}): '{y_adi}' adında bir yetenek bulunamadı!{self.renkler['SIFIRLA']}")
             return
 
-        # 5. OYUN MEKANİKLERİ VE HASAR SİSTEMİ
+        # 5. HASAR VE İYİLEŞTİRME
         if satir.startswith("hasar_ver"):
             parcalar = satir.split()
             degisken, miktar = parcalar[1], int(parcalar[2])
@@ -226,11 +265,11 @@ class DeterEngine:
                 self.hafiza[degisken] = int(self.hafiza[degisken]) + miktar
             return
 
-        # 6. ENVENTER / MATRİS İŞLEMLERİ
+        # 6. TORBA İŞLEMLERİ
         if satir.startswith("torba_olustur"):
             torba_adi = satir.split()[1]
             if torba_adi in self.tipler:
-                print(f"\n{self.renkler['KIRMIZI']}[DETER TİP HATASI]: '{torba_adi}' kilitli!{self.renkler['SIFIRLA']}")
+                print(f"\n{self.renkler['KIRMIZI']}[DETER TİP HATASI]: Kilitli!{self.renkler['SIFIRLA']}")
                 sys.exit()
             self.torbalar[torba_adi] = []
             self.tipler[torba_adi] = "TORBA"
@@ -272,7 +311,7 @@ class DeterEngine:
             print(self.hafiza.get(icerik, icerik.replace('"', '')))
             return
 
-        # 8. DEĞİŞKEN ATAMA VE SÖZDİZİMİ
+        # 8. SORU VE DEĞİŞKEN ATAMA
         if "sor" in satir:
             degisken, mesaj = satir.split("sor")
             degisken = degisken.replace("=", "").strip()
@@ -285,7 +324,6 @@ class DeterEngine:
             degisken, deger = degisken.strip(), deger.strip()
             
             if degisken in self.tipler and self.tipler[degisken] == "TORBA":
-                print(f"{self.renkler['KIRMIZI']}[DETER TİP HATASI]: '{degisken}' bir TORBA! Düz değer atanamaz!{self.renkler['SIFIRLA']}")
                 sys.exit()
 
             if "sansli_sayi" in deger:
@@ -293,13 +331,14 @@ class DeterEngine:
                 self.degisken_kaydet(degisken, random.randint(int(parcalar[0]), int(parcalar[1])), satir_no)
                 return
 
-            # Hesaplama alanı
+            # Sızdırılan Python modüllerini hesaplama alanında çalıştırma köprüsü
             hesap = deger
             for var in self.hafiza:
                 if var in hesap:
                     hesap = re.sub(r'\b' + var + r'\b', str(self.hafiza[var]), hesap)
             try:
-                if any(op in hesap for op in "+-*/<>=="):
+                # Eğer hesap içinde nokta varsa (Örn: math.sqrt), sızan modülü tetikle kanka
+                if any(op in hesap for op in "+-*/<>=."):
                     self.degisken_kaydet(degisken, eval(hesap), satir_no)
                 else:
                     self.degisken_kaydet(degisken, deger.replace('"', ''), satir_no)
@@ -313,11 +352,11 @@ class DeterEngine:
             tip = "SAYI" if str(deger).replace('.','',1).isdigit() else "YAZI"
             
         if isim in self.tipler and self.tipler[isim] != tip:
-            print(f"\n{self.renkler['KIRMIZI']}[DETER TİP HATASI] (Satır {satir_no}): '{isim}' tipi {self.tipler[isim]} olarak kilitli!{self.renkler['SIFIRLA']}")
+            print(f"\n{self.renkler['KIRMIZI']}[DETER TİP HATASI] (Satır {satir_no}): Tipi kilitli!{self.renkler['SIFIRLA']}")
             sys.exit()
         self.tipler[isim], self.hafiza[isim] = tip, deger
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
         DeterEngine().calistir(sys.argv[1])
-        
+                
