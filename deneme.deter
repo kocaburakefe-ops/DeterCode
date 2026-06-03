@@ -1,1 +1,12 @@
+// DeterCode Tip Güvenliği Testi
+
+// 1. Önce canta adında bir torba oluşturuyoruz
+torba_olustur canta
+torbaya_at canta "Kilic"
+
+// 2. Şimdi bilerek hata yapıyoruz ve torbanın içine düz sayı atamaya çalışıyoruz
+canta = 55
+
+// 3. Motor yukarıdaki satırda patlayacağı için bu yazı asla ekrana gelmeyecek
+yazdir "Bu yaziyi göremezsin çünkü koruma devreye girecek!"
 
