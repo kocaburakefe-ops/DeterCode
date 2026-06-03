@@ -1,0 +1,24 @@
+ekrani_temizle
+
+// 1. Python'ın matematik ordusunu içeri sızdırıyoruz!
+DAHİL_ET math
+
+// 2. Bir de başka bir dosyamız varmış gibi yapalım (İstersen oluşturabilirsin)
+// DAHİL_ET ek_dosya.deter
+
+renkli_yazdir turkuaz "--- v16.0 COŞKU VE SIZMA TESTİ ---"
+bekle 1
+
+// Python'ın köklü fonksiyonunu DeterCode kurallarıyla çalıştırıyoruz kanka
+sayi = 64
+koku = math.sqrt(sayi)
+
+yazdir "Girdiğimiz sayı:"
+yazdir sayi
+
+yazdir "Python'dan çalınan karekök sonucu:"
+yazdir koku
+
+// Tip kilidimizi kontrol edelim, hala taş gibi mi?
+// koku = "Burak" // Bunu açarsan sistem yine çöker, disiplin tavizsiz!
+  
