@@ -1,0 +1,28 @@
+ekrani_temizle
+
+// 1. PARAMETRELİ YETENEK TANIMLIYORUZ (C++ stili fonksiyon argümanı!)
+// Gelen parametreler: canavar_ismi, vurulacak_hasar
+YETENEK SAVAŞ_HAMLESİ isim hasar
+    renkli_yazdir kirmizi "⚔️ Savaş Alanı Güncellemesi:"
+    yazdir isim
+    renkli_yazdir kirmizi "Sana doğru kükredi!"
+    
+    // Küresel can değişkenimizden hasarı düşüyoruz kanka
+    hasar_ver kahraman_can hasar
+    hud_ciz kahraman_can
+YETENEK_BITIR
+
+// 2. KAHRAMAN KURULUMU
+kahraman_can = 100
+
+// 3. AMELENİN DİBİ C++ REZİL OLSUN, BAK ŞİMDİ PARAMETRE FIRLATIYORUZ:
+yetenek_cagir SAVAŞ_HAMLESİ "Siber_Ejderha_v1" 35
+bekle 1.5
+
+yetenek_cagir SAVAŞ_HAMLESİ "C++_Amele_Canavari" 45
+bekle 1
+
+// 4. STATİK DERLEME TESTİ (Eğer aşağıdaki satırın başındaki // yorumu kaldırırsan)
+// kahraman_can = "Burak"
+// Motor daha 1 saniye bile çalışmadan ÖN DERLEME aşamasında çat diye sistemi durduracak!
+  
