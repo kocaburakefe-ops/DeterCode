@@ -1,0 +1,37 @@
+// DeterCode v15.0 Enterprise Gelişmiş Test Senaryosu
+ekrani_temizle
+
+// 1. Önce özel bir yetenek (fonksiyon) tanımlıyoruz kanka
+YETENEK durum_raporu
+    hud_ciz oyuncu_can
+    torbadan_goster canta
+YETENEK_BITIR
+
+// 2. Ana değişkenleri ve çantamızı kilitliyoruz
+oyuncu_can = 100
+torba_olustur canta
+torbaya_at canta "Turkuaz Efsanevi Kilic"
+
+renkli_yazdir turkuaz "--- DETERCODE v15.0 ENTERPRISE BASLADI ---"
+bekle 1
+
+// Yeteneğimizi çağırıp ekrana grafik HUD basıyoruz
+yetenek_cagir durum_raporu
+bekle 1.5
+
+// 3. Çoklu EGER/DEGİLSE bloklarını ve matematiksel zindan kontrolünü deniyoruz
+hasar_ver oyuncu_can 60
+renkli_yazdir kirmizi "Tuzaga bastın! Ağır hasar aldın!"
+bekle 1
+
+EGER oyuncu_can > 50
+    renkli_yazdir yesil "Durumun hala idare eder kanka."
+DEGİLSE_EGER oyuncu_can > 20
+    renkli_yazdir sari "Canın tehlikeli seviyede! İksir kullanmalısın."
+DEGİLSE
+    renkli_yazdir kirmizi "Kritik durum! Ölüme yakınsın!"
+BLOK_BITIR
+
+bekle 1
+yetenek_cagir durum_raporu
+  
