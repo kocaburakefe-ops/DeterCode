@@ -1,7 +1,14 @@
-// DAHİL_ET komutu artık kütüphane klasörünün içine bakıyor
+// Kütüphaneleri Entegre Et
 DAHİL_ET kutuphane/temel_hareketler.deter
-DAHİL_ET kutuphane/savas_teknikleri.deter
-ekrani_temizle
+DAHİL_ET kutuphane/savas_hareketleri.deter
+
+ekrani_temle
+
+// Test Ediyoruz
+yetenek_cagir ilerle 20
+yetenek_cagir saldir "Siber_Ejderha_v1" 50
+yetenek_cagir iyiles 30
+
 
 // 1. PARAMETRELİ YETENEK TANIMLIYORUZ (C++ stili fonksiyon argümanı!)
 // Gelen parametreler: canavar_ismi, vurulacak_hasar
