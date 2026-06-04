@@ -1,0 +1,9 @@
+EGER oyuncu_can < 30
+    yazdir "Dikkat! Canın kritik seviyede!"
+    yetenek_cagir iyiles 50
+BITIR_EGER
+
+EGER dusman_can < 20
+    yazdir "Düşman pes etmek üzere, bitirici darbeyi vur!"
+BITIR_EGER
+  
