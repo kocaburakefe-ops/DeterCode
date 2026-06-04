@@ -1,9 +1,11 @@
-YETENEK sert_vurus hedef hasar
+YETENEK saldir hedef hasar
+    yazdir "Saldırı başlatıldı..."
     hasar_ver hedef hasar
-    renkli_yazdir KIRMIZI "Hedefe sert darbe indirildi!"
+    yazdir "Hasar verildi!"
 YETENEK_BITIR
 
-YETENEK iyilesme miktar
+YETENEK iyiles miktar
     iyilestir oyuncu miktar
-    renkli_yazdir YESIL "Can yenilendi!"
+    yazdir "Can yenilendi, durum stabil."
 YETENEK_BITIR
+
