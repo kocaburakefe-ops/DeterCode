@@ -1,9 +1,14 @@
-EGER oyuncu_can < 30
-    yazdir "Dikkat! Canın kritik seviyede!"
-    yetenek_cagir iyiles 50
-BITIR_EGER
+// Karar Mekanizması Kütüphanesi
+YETENEK can_kontrol miktar
+    EGER miktar < 30
+        yazdir "UYARI: Can kritik! İyileşme tetikleniyor..."
+        yetenek_cagir iyiles 50
+    BITIR_EGER
+YETENEK_BITIR
 
-EGER dusman_can < 20
-    yazdir "Düşman pes etmek üzere, bitirici darbeyi vur!"
-BITIR_EGER
-  
+YETENEK dusman_durum_kontrol can_degeri
+    EGER can_degeri < 20
+        yazdir "DÜŞMAN ZAYIFLADI: Bitirici darbe zamanı!"
+    BITIR_EGER
+YETENEK_BITIR
+
