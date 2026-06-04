@@ -1,1 +1,8 @@
+YETENEK ileri_git mesafe
+    yazdir "İleriye doğru gidiliyor..."
+    yazdir mesafe
+YETENEK_BITIR
 
+YETENEK geri_cekil
+    yazdir "Güvenli bölgeye kaçıldı!"
+YETENEK_BITIR
