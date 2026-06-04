@@ -1,3 +1,6 @@
+// DAHİL_ET komutu artık kütüphane klasörünün içine bakıyor
+DAHİL_ET kutuphane/temel_hareketler.deter
+DAHİL_ET kutuphane/savas_teknikleri.deter
 ekrani_temizle
 
 // 1. PARAMETRELİ YETENEK TANIMLIYORUZ (C++ stili fonksiyon argümanı!)
