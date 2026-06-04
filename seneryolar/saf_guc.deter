@@ -1,11 +1,12 @@
 // Kütüphaneleri Entegre Et
 DAHİL_ET kutuphane/temel_hareketler.deter
 DAHİL_ET kutuphane/savas_hareketleri.deter
+DAHİL_ET kutuphane/karar_mekanizmasi.deter
 
 ekrani_temle
 
-// Sadece oyun akışı - tertemiz!
-yetenek_cagir ilerle 20
-yetenek_cagir saldir "Siber_Ejderha_v1" 50
-yetenek_cagir iyiles 30
-yetenek_cagir SAVAŞ_HAMLESİ "C++_Amele_Canavarı" 45
+// Dövüş Senaryosu
+yetenek_cagir saldir "Siber_Ejderha_v1" 80
+// Burada zekayı devreye sokuyoruz:
+yetenek_cagir can_kontrol 25
+yetenek_cagir dusman_durum_kontrol 15
