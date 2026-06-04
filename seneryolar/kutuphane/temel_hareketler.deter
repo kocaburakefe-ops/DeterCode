@@ -1,8 +1,9 @@
-YETENEK ileri_git mesafe
-    yazdir "İleriye doğru gidiliyor..."
+YETENEK ilerle mesafe
+    yazdir "İlerleniyor..."
     yazdir mesafe
 YETENEK_BITIR
 
 YETENEK geri_cekil
-    yazdir "Güvenli bölgeye kaçıldı!"
+    yazdir "Geri çekilme manevrası yapıldı."
 YETENEK_BITIR
+
