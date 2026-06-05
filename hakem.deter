@@ -1,0 +1,17 @@
+// Savaş Hakemi Kütüphanesi
+YETENEK savas_sonuc_kontrol kahraman_can dusman_can
+    EGER kahraman_can <= 0
+        ekrani_temle
+        yazdir "--- OYUN BİTTİ ---"
+        yazdir "Boss seni yendi. Daha fazla çalışmalısın, Burak!"
+        DURDUR // Motoru durduracak komut
+    BITIR_EGER
+
+    EGER dusman_can <= 0
+        ekrani_temle
+        yazdir "--- ZAFER ---"
+        yazdir "Boss yere serildi! DeterCode hakimiyeti başladı!"
+        DURDUR
+    BITIR_EGER
+YETENEK_BITIR
+  
