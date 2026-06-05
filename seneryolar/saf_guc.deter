@@ -1,17 +1,18 @@
-// 1. TÜM KÜTÜPHANELERİ EN TEPEDE BİRLEŞTİR
+// Tüm Kütüphaneler (Motorun Parçaları)
 DAHİL_ET kutuphane/temel_hareketler.deter
 DAHİL_ET kutuphane/savas_hareketleri.deter
 DAHİL_ET kutuphane/karar_mekanizmasi.deter
 DAHİL_ET kutuphane/boss_ai.deter
-DAHİL_ET kutuphane/dongu.deter
 DAHİL_ET kutuphane/hakem.deter
+DAHİL_ET kutuphane/torba.deter
+DAHİL_ET kutuphane/gunluk.deter
+DAHİL_ET kutuphane/seviye_sistemi.deter
+DAHİL_ET kutuphane/kayit_sistemi.deter
+DAHİL_ET kutuphane/debug.deter
 
-// 2. BAŞLANGIÇ
 ekrani_temle
-yazdir "Savaş Başladı! Hayatta kalmaya çalış..."
+yazdir "Sistem Başlatılıyor..."
+yazdir "DeterCode Motoru V2.0 Aktif."
 
-// 3. DÖNGÜYÜ BAŞLAT
-// (Not: savas_sonuc_kontrol fonksiyonunu artık dongu.deter dosyasının içine gömdüğümüzden, 
-// burada ekstra satır yazmana gerek kalmadı kanka)
+// Her şey hazır, simülasyonu başlat!
 yetenek_cagir baslat_dongu
-
