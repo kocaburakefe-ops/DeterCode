@@ -2,11 +2,11 @@
 DAHİL_ET kutuphane/temel_hareketler.deter
 DAHİL_ET kutuphane/savas_hareketleri.deter
 DAHİL_ET kutuphane/karar_mekanizmasi.deter
+DAHİL_ET kutuphane/boss_ai.deter
 
 ekrani_temle
 
-// Dövüş Senaryosu
-yetenek_cagir saldir "Siber_Ejderha_v1" 80
-// Burada zekayı devreye sokuyoruz:
-yetenek_cagir can_kontrol 25
-yetenek_cagir dusman_durum_kontrol 15
+// Dövüş Başlasın
+yetenek_cagir saldir "Siber_Ejderha_v1" 20
+yetenek_cagir boss_karar_ver 45
+
