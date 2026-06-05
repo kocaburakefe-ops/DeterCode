@@ -1,0 +1,6 @@
+YETENEK log_yaz hamle_metni
+    // Arka planda savas_gunlugu.txt dosyasına yazar
+    dosyaya_yaz "savas_gunlugu.txt" hamle_metni
+    yazdir "[GÜNLÜK KAYDEDİLDİ]: " + hamle_metni
+YETENEK_BITIR
+  
