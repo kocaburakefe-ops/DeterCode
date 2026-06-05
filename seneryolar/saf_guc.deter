@@ -1,12 +1,11 @@
-// Kütüphaneleri Entegre Et
 DAHİL_ET kutuphane/temel_hareketler.deter
-DAHİL_ET kutuphane/savas_hareketleri.deter
-DAHİL_ET kutuphane/karar_mekanizmasi.deter
-DAHİL_ET kutuphane/boss_ai.deter
+    DAHİL_ET kutuphane/savas_hareketleri.deter
+    DAHİL_ET kutuphane/karar_mekanizmasi.deter
+    DAHİL_ET kutuphane/boss_ai.deter
+    DAHİL_ET kutuphane/dongu.deter
 
-ekrani_temle
-
-// Dövüş Başlasın
-yetenek_cagir saldir "Siber_Ejderha_v1" 20
-yetenek_cagir boss_karar_ver 45
-
+    ekrani_temle
+    yazdir "Savaş Başladı! Hayatta kalmaya çalış..."
+    
+    // Oyunun kalbini çalıştırıyoruz
+    yetenek_cagir baslat_dongu
