@@ -1,0 +1,6 @@
+YETENEK sistem_durumu_goster
+    yazdir "[DEBUG] Kahraman Can: " + kahraman_can
+    yazdir "[DEBUG] Düşman Can: " + dusman_can
+    yazdir "[DEBUG] XP Durumu: " + kahraman_xp
+YETENEK_BITIR
+  
