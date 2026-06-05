@@ -98,11 +98,34 @@ class DeterCodeMotoru:
         except FileNotFoundError:
             print(f"[HATA] {dosya_yolu} bulunamadı!")
 
+    # Belleği anlık güncelleyen "beyin sinyali"
+    def durum_guncelle(self, degisken, yeni_deger):
+        if degisken in self.bellek:
+            self.bellek[degisken] = yeni_deger
+            print(f"[BELLEK] {degisken} güncellendi: {yeni_deger}")
+        else:
+            self.bellek[degisken] = yeni_deger
+            print(f"[BELLEK] Yeni değişken eklendi: {degisken} = {yeni_deger}")
+
+    # Motorun tüm parçaları yerinde mi kontrolü
+    def sistem_kontrol(self):
+        # Yollar kütüphane klasörüne göre ayarlandı
+        gerekli_kutuphaneler = ["kutuphane/temel_hareketler.deter", "kutuphane/boss_ai.deter", "kutuphane/hakem.deter"]
+        print("[SİSTEM] Kontrol başlatılıyor...")
+        for lib in gerekli_kutuphaneler:
+            if lib in self.kutuphaneler:
+                print(f"[TEST] {lib} - OK")
+            else:
+                print(f"[TEST] {lib} - BEKLENİYOR (Dosya çalışınca yüklenecek)")
+
 # --- MOTORU BAŞLATMA TESTİ ---
 if __name__ == "__main__":
     motor = DeterCodeMotoru()
     print("=== DeterCode Motoru Çekirdeği V2.0 Başlatıldı ===")
     
+    # Motor kendi kendini test etsin
+    motor.sistem_kontrol()
+    
     # Şimdilik sadece ana dosyayı çalıştırıyoruz
-    # motor.dosya_calistir("senaryolar/saf_guc.deter")
-          
+    motor.dosya_calistir("senaryolar/saf_guc.deter")
+    
