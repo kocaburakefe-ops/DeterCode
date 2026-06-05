@@ -1,8 +1,23 @@
 YETENEK baslat_dongu
     YAP_DONERKEN
+        // 1. Zeka ve Saldırı
         yetenek_cagir boss_karar_ver kahraman_can
-        yetenek_cagir can_kontrol kahraman_can
+        
+        // 2. Akıllı Envanter Kontrolü
+        yetenek_cagir torba_kontrol "can_takviyesi"
+        
+        // 3. Hakem Kontrolü (Oyun bitti mi?)
+        yetenek_cagir savas_sonuc_kontrol kahraman_can dusman_can
+        
+        // 4. Arka Plan İşlemleri
+        yetenek_cagir log_yaz "Tur tamamlandı, durum stabil."
+        yetenek_cagir tecrube_kazan 15
+        yetenek_cagir sistem_durumu_goster
+        
+        // 5. Oyunu her tur otomatik kaydet (Auto-Save)
+        yetenek_cagir oyunu_kaydet
+        
         bekle 2
     BITIR_DONGU
 YETENEK_BITIR
-  
+
