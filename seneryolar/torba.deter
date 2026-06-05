@@ -1,1 +1,15 @@
+// Akıllı Envanter Yönetimi
+YETENEK torba_kontrol etki_alani
+    EGER kahraman_can < 30
+        yetenek_cagir esya_kullan "Buyuk_Ikisir"
+    BITIR_EGER
+YETENEK_BITIR
 
+YETENEK esya_kullan esya_adi
+    yazdir "Kullanılıyor: " + esya_adi
+    EGER esya_adi == "Buyuk_Ikisir"
+        // İksir gücünü doğrudan kahraman_can değişkenine basıyoruz
+        kahraman_can = kahraman_can + 50
+        yazdir "Canın yükseldi! Yeni durum: " + kahraman_can
+    BITIR_EGER
+YETENEK_BITIR
