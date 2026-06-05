@@ -1,0 +1,13 @@
+YETENEK tecrube_kazan miktar
+    kahraman_xp = kahraman_xp + miktar
+    yazdir "Kazanılan XP: " + miktar
+    
+    EGER kahraman_xp > 100
+        kahraman_seviye = kahraman_seviye + 1
+        kahraman_xp = 0
+        kahraman_max_can = kahraman_max_can + 50
+        kahraman_can = kahraman_max_can
+        yazdir "LEVEL UP! Yeni Seviye: " + kahraman_seviye
+    BITIR_EGER
+YETENEK_BITIR
+  
