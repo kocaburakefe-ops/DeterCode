@@ -1,0 +1,7 @@
+YETENEK oyunu_kaydet
+    dosyaya_yaz "save_data.txt" kahraman_can
+    dosyaya_yaz "save_data.txt" kahraman_seviye
+    dosyaya_yaz "save_data.txt" kahraman_xp
+    yazdir "--- OYUN BAŞARIYLA KAYDEDİLDİ ---"
+YETENEK_BITIR
+  
