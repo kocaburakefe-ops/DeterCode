@@ -1,0 +1,8 @@
+YETENEK baslat_dongu
+    YAP_DONERKEN
+        yetenek_cagir boss_karar_ver kahraman_can
+        yetenek_cagir can_kontrol kahraman_can
+        bekle 2
+    BITIR_DONGU
+YETENEK_BITIR
+  
