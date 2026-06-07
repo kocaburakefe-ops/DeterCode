@@ -1,63 +1,58 @@
-yazdir "=== DETERCODE ADAPTIVE BATTLE V5.0 ==="
-yazdir "Kahraman Canı: kahraman_can | Düşman Canı: dusman_can"
+yazdir "=== DETERCODE LOW-LEVEL RUNTIME V6.0 ==="
+
+// Savaş öncesi yığın testi (Geri dönüş adresleri veya kritik veriler için)
+PUSH 777
+PUSH 888
+
+yazdir "--- Stack Belleğe İlk Veriler PUSH Edildi ---"
 
 ETİKET TUR_BASI
 yazdir "----------------------------------------"
-yazdir "Hamleni Seç: [1] Normal Saldırı | [2] Odaklanmış Ağır Darbe"
+yazdir "Hamleni Seç: [1] Kritik Hasar Depola (PUSH) | [2] Depolanan Hasarı Sal (POP)"
 GIRDI secim
 
-// Oyuncu Hamleleri
 EGER secim == 1
-RASTELE son_hasar = 20-35
-EGER secim == 2
-RASTELE son_hasar = 5-60
+RASTELE son_hasar = 40-80
+EGER secim == 1
+PUSH son_hasar
 
+EGER secim == 2
+POP son_hasar
+EGER secim == 2
 dusman_can = dusman_can - son_hasar
-yazdir "[KAHRAMAN] Düşmana son_hasar hasar verdi!"
+EGER secim == 2
+yazdir "[KAHRAMAN] Yığından çekilen Şok Darbe vuruldu! Hasar: son_hasar"
+
+// Düşman yapay zekası devreye girsin
+DAHİL_ET kutuphane/yapay_zekaa.deter
+
+// Düşman normal atağı
+EGER dusman_hamlesi == 1
+RASTELE son_hasar = 10-25
+EGER dusman_hamlesi == 1
+kahraman_can = kahraman_can - son_hasar
+
+yazdir "Mevcut Durum -> Kahraman: kahraman_can | Düşman: dusman_can"
+
+// Her tur sonunda yapay zeka sıfırlanan geçici verileri temizlesin (GC)
+son_hasar = 0
+secim = 0
+COP_TOPLA
+
+BEKLE 0.5
 
 EGER dusman_can < 1
 GOTO ZAFER
 
-// Yapay Zeka Kararını Hesapla
-DAHİL_ET kutuphane/yapay_zekaa.deter
-
-// AI Hamlelerinin Sonuçları
-// Hamle 1: Saldırı
-EGER dusman_hamlesi == 1
-RASTELE son_hasar = 15-30
-EGER dusman_hamlesi == 1
-kahraman_can = kahraman_can - son_hasar
-EGER dusman_hamlesi == 1
-yazdir "[DÜŞMAN AI] Karar: Saldırı! Kahramana son_hasar hasar verdi."
-
-// Hamle 2: Defans / Karşı Atak
-EGER dusman_hamlesi == 2
-RASTELE son_hasar = 5-15
-EGER dusman_hamlesi == 2
-kahraman_can = kahraman_can - son_hasar
-EGER dusman_hamlesi == 2
-yazdir "[DÜŞMAN AI] Karar: Defansif Duruş! Az hasar verdi ama savunmada."
-
-// Hamle 3: Can Yenileme
-EGER dusman_hamlesi == 3
-dusman_can = dusman_can + 40
-EGER dusman_hamlesi == 3
-yazdir "[DÜŞMAN AI] Karar: İyileşme! Düşman büyü yaptı ve +40 can kazandı!"
-
-yazdir "Mevcut Durum -> Kahraman: kahraman_can | Düşman: dusman_can"
-BEKLE 1
-
 EGER kahraman_can < 1
 GOTO YENILGI
 
-EGER dusman_can > 0
 GOTO TUR_BASI
 
 ETİKET ZAFER
-yazdir "=== KAZANDIN! Ejderha boyun eğdi. ==="
+yazdir "=== ZAFER! RAM tertemiz, düşman yerde! ==="
 DURDUR
 
 ETİKET YENILGI
-yazdir "=== ÖLDÜN! Yapay zeka seni alt etti. ==="
+yazdir "=== YENİLGİ! Yapay zeka bellek sızıntısından daha ölümcül çıktı. ==="
 DURDUR
-  
