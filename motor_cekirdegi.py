@@ -4,7 +4,6 @@ import time
 class DeterCodeMotoru:
     def __init__(self):
         # GELİŞMİŞ BELLEK YÖNETİMİ (Smart Memory)
-        # Artık sadece değerleri değil, tiplerini de takip ediyoruz!
         self.bellek = {
             "kahraman_can": 100,
             "kahraman_max_can": 100,
@@ -28,7 +27,6 @@ class DeterCodeMotoru:
         with open(dosya_adi, "a", encoding="utf-8") as dosya:
             dosya.write(icerik + "\n")
 
-    # YENİ EKLENEN SİSTEM: GÜVENLİ MATEMATİK VE TİP KONTROLÜ
     def matematik_isleme(self, satir):
         if "=" in satir and "EGER" not in satir:
             parcalar = satir.split("=")
@@ -41,7 +39,7 @@ class DeterCodeMotoru:
                 # Python'un çökmesini engellemek için güvenli çalıştırma
                 yeni_deger = eval(islem_cozulmus)
                 
-                # C++'ı yendiğimiz nokta: Tip Denetimi (Type Checking)
+                # Tip Denetimi (Type Checking)
                 if isinstance(yeni_deger, (int, float)):
                     self.bellek[degisken_adi] = yeni_deger
                     print(f"[BELLEK GÜNCELLENDİ] {degisken_adi} -> {yeni_deger}")
@@ -129,6 +127,7 @@ if __name__ == "__main__":
     
     motor.sistem_kontrol()
     
-    # Ana test dosyasını ateşle
+    # Zırh testini çalıştırıyoruz
+    print("\n--- SİMÜLASYON BAŞLIYOR ---\n")
     motor.dosya_calistir("senaryolar/saf_guc.deter")
     
