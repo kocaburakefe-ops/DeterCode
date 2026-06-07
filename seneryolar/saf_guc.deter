@@ -1,25 +1,28 @@
-yazdir "=== DETERCODE OYUN MOTORU BAŞLATILDI ==="
+yazdir "=== DETERCODE ECOSYSTEM V3.0 START ==="
 
-// İlgili alt kütüphaneleri sisteme enjekte ediyoruz
+// Yapılandırma ve eski kayıtları yükle
+DAHİL_ET config/ayarlar.deter
+VERI_YUKLE
+
 DAHİL_ET kutuphane/temel_hareketler.deter
 DAHİL_ET kutuphane/boss_ai.deter
+DAHİL_ET kutuphane/matematik.deter
+DAHİL_ET kutuphane/gorsel.deter
 
-yazdir "--- SAVAŞ DÖNGÜSÜ AKTİF ---"
+yazdir "--- DÖNGÜ ÖNCESİ DURUM: Can: kahraman_can ---"
 
-// Birinci Aşama: Hasar alma ve kontrol
-kahraman_can = kahraman_can - 40
-yazdir "Kahraman darbe aldı! Kalan Can: kahraman_can"
+// C++ TARZI GOTO DÖNGÜSÜ (Can 150'ye ulaşana kadar döner)
+ETİKET CAN_DÖNGÜSÜ
+kahraman_can = kahraman_can + 15
+yazdir "[DÖNGÜ İÇİ] Kahraman şifalanıyor... Anlık Can: kahraman_can"
+BEKLE 0.3
 
-// Kritik durum kontrolü (Akış Yönetimi)
-EGER kahraman_can < 80
-yetenek_cagir ACIL_IYILESTIRME
+EGER kahraman_can < 150
+GOTO CAN_DÖNGÜSÜ
 
-// İkinci Aşama: Hata yakalama kalkanı testi (Bilinçli Hata)
-kahraman_can = kahraman_can + tanimsiz_iksir
+yazdir "--- DÖNGÜDEN BAŞARIYLA ÇIKILDI ---"
 
-// Üçüncü Aşama: Düşman atağı
-EGER dusman_ofke > 20
-yetenek_cagir EJDERHA_ATESI
+// Güncel veriyi diske kaydet
+VERI_KAYDET
 
-yazdir "=== SİMÜLASYON BAŞARIYLA SONUÇLANDI ==="
-
+yazdir "=== SİSTEM SÜRECİ TAMAMLADI ==="
