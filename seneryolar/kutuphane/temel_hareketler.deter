@@ -1,9 +1,6 @@
-YETENEK ilerle mesafe
-    yazdir "İlerleniyor..."
-    yazdir mesafe
-YETENEK_BITIR
+// DeterCode Temel Hareketler Modülü
+yazdir "[KÜTÜPHANE] temel_hareketler.deter başarıyla yüklendi."
 
-YETENEK geri_cekil
-    yazdir "Geri çekilme manevrası yapıldı."
-YETENEK_BITIR
-
+// Kahraman defans moduna geçerse canını ve durumunu ayarla
+kahraman_can = kahraman_can + 10
+yazdir "[AKSİYON] Kahraman savunma pozisyonu aldı, +10 can kazanıldı."
