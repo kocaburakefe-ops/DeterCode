@@ -1,18 +1,15 @@
-// Tüm Kütüphaneler (Motorun Parçaları)
-DAHİL_ET kutuphane/temel_hareketler.deter
-DAHİL_ET kutuphane/savas_hareketleri.deter
-DAHİL_ET kutuphane/karar_mekanizmasi.deter
-DAHİL_ET kutuphane/boss_ai.deter
-DAHİL_ET kutuphane/hakem.deter
-DAHİL_ET kutuphane/torba.deter
-DAHİL_ET kutuphane/gunluk.deter
-DAHİL_ET kutuphane/seviye_sistemi.deter
-DAHİL_ET kutuphane/kayit_sistemi.deter
-DAHİL_ET kutuphane/debug.deter
+yazdir "=== MOTOR ZIRHI TEST EDILIYOR ==="
 
-ekrani_temle
-yazdir "Sistem Başlatılıyor..."
-yazdir "DeterCode Motoru V2.0 Aktif."
+// Normal İşlem: Canı 20 azalt
+kahraman_can = kahraman_can - 20
+yazdir "Kahraman hasar aldı! Güncel Can: kahraman_can"
 
-// Her şey hazır, simülasyonu başlat!
-yetenek_cagir baslat_dongu
+// ZIRH TESTİ: Hatalı işlem veriyoruz (Motorun çökmemesi lazım)
+kahraman_can = kahraman_can + zehirli_ok
+
+// Şart kontrolü: Sistem hala hayatta mı?
+EGER kahraman_can <= 80
+yetenek_cagir IYILESTIRME_SISTEMI
+
+yazdir "=== SISTEM COKMEDEN TESTI TAMAMLADI ==="
+
