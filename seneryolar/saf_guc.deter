@@ -1,11 +1,25 @@
-yazdir "=== KONTROL AKISI TESTI ==="
+yazdir "=== DETERCODE OYUN MOTORU BAŞLATILDI ==="
 
-// TEST 1: Şartın DOĞRU olması durumu (kahraman_can 60 olduğu için 80'den küçüktür)
+// İlgili alt kütüphaneleri sisteme enjekte ediyoruz
+DAHİL_ET kutuphane/temel_hareketler.deter
+DAHİL_ET kutuphane/boss_ai.deter
+
+yazdir "--- SAVAŞ DÖNGÜSÜ AKTİF ---"
+
+// Birinci Aşama: Hasar alma ve kontrol
+kahraman_can = kahraman_can - 40
+yazdir "Kahraman darbe aldı! Kalan Can: kahraman_can"
+
+// Kritik durum kontrolü (Akış Yönetimi)
 EGER kahraman_can < 80
-yetenek_cagir CAN_IKSIRI_KULLAN
+yetenek_cagir ACIL_IYILESTIRME
 
-// TEST 2: Şartın YANLIŞ olması durumu (60, 20'den küçük değildir)
-EGER kahraman_can < 20
-yetenek_cagir ACIL_ISINLANMA
+// İkinci Aşama: Hata yakalama kalkanı testi (Bilinçli Hata)
+kahraman_can = kahraman_can + tanimsiz_iksir
 
-yazdir "=== TEST BAŞARIYLA TAMAMLANDI ==="
+// Üçüncü Aşama: Düşman atağı
+EGER dusman_ofke > 20
+yetenek_cagir EJDERHA_ATESI
+
+yazdir "=== SİMÜLASYON BAŞARIYLA SONUÇLANDI ==="
+
