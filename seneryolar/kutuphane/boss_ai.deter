@@ -1,5 +1,2 @@
-// DeterCode Boss Yapay Zeka Modülü
 yazdir "[KÜTÜPHANE] boss_ai.deter başarıyla yüklendi."
-
 dusman_ofke = dusman_ofke + 25
-yazdir "[YAPAY ZEKÂ] Ejderha sinirleniyor! Öfke seviyesi: dusman_ofke"
