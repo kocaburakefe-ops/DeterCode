@@ -1,6 +1,2 @@
-// DeterCode Temel Hareketler Modülü
 yazdir "[KÜTÜPHANE] temel_hareketler.deter başarıyla yüklendi."
-
-// Kahraman defans moduna geçerse canını ve durumunu ayarla
 kahraman_can = kahraman_can + 10
-yazdir "[AKSİYON] Kahraman savunma pozisyonu aldı, +10 can kazanıldı."
