@@ -1,10 +1,10 @@
 import os
 import time
 import json
+import random  # V4.0 ile eklenen şans çekirdeği
 
 class DeterCodeMotoru:
     def __init__(self):
-        # MERKEZİ BELLEK MİMARİSİ
         self.bellek = {
             "kahraman_can": 100,
             "kahraman_max_can": 100,
@@ -13,15 +13,14 @@ class DeterCodeMotoru:
             "dusman_can": 150,
             "dusman_ofke": 0,
             "oyun_zorluk": 1,
-            "ses_seviyesi": 80
+            "ses_seviyesi": 80,
+            "son_hasar": 0  # Yeni dinamik değişken
         }
         self.kutuphaneler = []
         self.satir_atla = False
-        
-        # JUMP & LOOP MİMARİSİ (Instruction Pointer ve Etiketler)
         self.etiketler = {}
         self.current_lines = []
-        self.ip = 0  # Instruction Pointer (Yönerge İşaretçisi)
+        self.ip = 0 
 
     def log_yaz(self, mesaj):
         timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
@@ -33,9 +32,6 @@ class DeterCodeMotoru:
         except FileNotFoundError:
             pass
 
-    def ekrani_temizle(self):
-        os.system('cls' if os.name == 'nt' else 'clear')
-
     def degiskenleri_coz(self, metin):
         for anahtar, deger in self.bellek.items():
             if anahtar in metin:
@@ -43,7 +39,7 @@ class DeterCodeMotoru:
         return metin
 
     def matematik_isleme(self, satir):
-        if "=" in satir and "EGER" not in satir:
+        if "=" in satir and "EGER" not in satir and "RASTELE" not in satir:
             parcalar = satir.split("=")
             degisken_adi = parcalar[0].strip()
             islem = parcalar[1].strip()
@@ -54,10 +50,10 @@ class DeterCodeMotoru:
                 if isinstance(yeni_deger, (int, float)):
                     self.bellek[degisken_adi] = yeni_deger
                     self.log_yaz(f"[BELLEK GÜNCELLENDİ] {degisken_adi} -> {yeni_deger}")
-                else:
-                    self.log_yaz(f"[ÇEKİRDEK UYARISI] '{degisken_adi}' için geçersiz veri tipi!")
             except Exception:
-                self.log_yaz(f"[ÇÖKME ENGELLENDİ] Hatalı matematik işlemi pas geçildi: {satir}")
+                # V4.0 Self-Healing: Çökmek yerine güvenli bir fallback ataması yapar
+                self.bellek[degisken_adi] = 0
+                self.log_yaz(f"[ANOMALİ YAKALANDI] '{satir}' hesaplanamadı! Güvenlik gereği 0 atandı.")
 
     def satiri_isle(self, satir):
         satir = satir.strip()
@@ -67,22 +63,17 @@ class DeterCodeMotoru:
 
         if self.satir_atla:
             self.satir_atla = False
-            self.log_yaz(f"[MANTIK] Şart sağlanmadığı için satır atlandı: '{satir}'")
             return
 
         if satir.startswith("DAHİL_ET"):
             dosya_yolu = satir.split(" ")[1]
             if dosya_yolu not in self.kutuphaneler:
                 self.kutuphaneler.append(dosya_yolu)
-                self.log_yaz(f"[SİSTEM MODÜLÜ] {dosya_yolu} sisteme yükleniyor...")
-                # Alt kütüphaneleri mevcut IP'yi bozmadan ayrı çalıştırır
+                self.log_yaz(f"[SİSTEM MODÜLÜ] {dosya_yolu} enjekte ediliyor...")
                 alt_motor = DeterCodeMotoru()
                 alt_motor.bellek = self.bellek
                 alt_motor.dosya_calistir(dosya_yolu)
                 self.bellek = alt_motor.bellek
-
-        elif satir == "ekrani_temle":
-            self.ekrani_temizle()
 
         elif satir.startswith("yazdir"):
             mesaj = satir.replace("yazdir", "").strip().replace('"', '')
@@ -94,14 +85,28 @@ class DeterCodeMotoru:
             sart_cozulmus = self.degiskenleri_coz(sart)
             try:
                 if eval(sart_cozulmus):
-                    self.log_yaz(f"[MANTIK] Şart DOĞRU: {sart}")
                     self.satir_atla = False
                 else:
-                    self.log_yaz(f"[MANTIK] Şart YANLIŞ: {sart}")
                     self.satir_atla = True
             except Exception:
-                self.log_yaz(f"[MANTIK HATASI] Şart çözülemedi: {sart}")
+                self.log_yaz(f"[MANTIK ANOMALİSİ] Şart çözülemedi, satır atlanıyor: {sart}")
                 self.satir_atla = True
+
+        # V4.0 RASTELE MİMARİSİ (Kullanım: RASTELE son_hasar = 15-45)
+        elif satir.startswith("RASTELE"):
+            try:
+                parcalar = satir.replace("RASTELE", "").strip().split("=")
+                degisken_adi = parcalar[0].strip()
+                aralik = parcalar[1].strip().split("-")
+                
+                min_deg = int(self.degiskenleri_coz(aralik[0].strip()))
+                max_deg = int(self.degiskenleri_coz(aralik[1].strip()))
+                
+                rastgele_sonuc = random.randint(min_deg, max_deg)
+                self.bellek[degisken_adi] = rastgele_sonuc
+                self.log_yaz(f"[ZAR ATILDI] RASTELE {degisken_adi} -> {rastgele_sonuc} ({min_deg}-{max_deg} arası)")
+            except Exception as e:
+                self.log_yaz(f"[ŞANS HATASI] Rastgele sayı üretim şablonu hatalı: {satir} | {e}")
 
         elif satir.startswith("BEKLE"):
             saniye = float(satir.split(" ")[1])
@@ -115,32 +120,27 @@ class DeterCodeMotoru:
             hedef_etiket = satir.split(" ")[1]
             if hedef_etiket in self.etiketler:
                 self.ip = self.etiketler[hedef_etiket]
-                self.log_yaz(f"[JUMP] Kod '{hedef_etiket}' etiketine sıçradı (Satır: {self.ip})")
             else:
-                self.log_yaz(f"[JUMP ERROR] '{hedef_etiket}' adında bir etiket bulunamadı!")
+                self.log_yaz(f"[MANTIK HATASI] Etiket bulunamadı: '{hedef_etiket}'")
 
         elif satir == "VERI_KAYDET":
-            try:
-                with open("kayit/save_data.json", "w", encoding="utf-8") as f:
-                    json.dump(self.bellek, f, indent=4)
-                self.log_yaz("[DEPOLAMA] Karakter verileri JSON dosyasına mühürlendi.")
-            except Exception as e:
-                self.log_yaz(f"[DEPOLAMA HATASI] Kayıt başarısız: {e}")
+            with open("kayit/save_data.json", "w", encoding="utf-8") as f:
+                json.dump(self.bellek, f, indent=4)
+            self.log_yaz("[DEPOLAMA] Karakter verileri JSON dosyasına mühürlendi.")
 
         elif satir == "VERI_YUKLE":
             try:
                 with open("kayit/save_data.json", "r", encoding="utf-8") as f:
-                    yuklenen_veri = json.load(f)
-                    self.bellek.update(yuklenen_veri)
+                    self.bellek.update(json.load(f))
                 self.log_yaz("[DEPOLAMA] Kayıtlı veriler başarıyla belleğe geri yüklendi.")
             except FileNotFoundError:
-                self.log_yaz("[DEPOLAMA] Kayıt dosyası bulunamadı, varsayılan bellek aktif.")
+                pass
 
         elif satir.startswith("yetenek_cagir"):
             yetenek_adi = satir.split(" ")[1]
             self.log_yaz(f"[YETENEK TETİKLENDİ] ===> {yetenek_adi.upper()} <===")
 
-        elif "=" in satir and "EGER" not in satir:
+        elif "=" in satir and "EGER" not in satir and "RASTELE" not in satir:
             self.matematik_isleme(satir)
 
     def dosya_calistir(self, dosya_yolu):
@@ -148,19 +148,15 @@ class DeterCodeMotoru:
             with open(dosya_yolu, "r", encoding="utf-8") as dosya:
                 self.current_lines = [line.strip() for line in dosya.readlines()]
             
-            # ETİKETLERİ ÖNCEDEN TARA VE KAYDET (Pre-parsing Labels)
             for idx, line in enumerate(self.current_lines):
                 if line.startswith("ETİKET"):
-                    etiket_adi = line.split(" ")[1].strip()
-                    self.etiketler[etiket_adi] = idx
+                    self.etiketler[line.split(" ")[1].strip()] = idx
 
-            # INSTRUCTION POINTER DÖNGÜSÜ
             self.ip = 0
             while self.ip < len(self.current_lines):
                 satir = self.current_lines[self.ip]
-                self.ip += 1  # İşaretçiyi ilerlet
+                self.ip += 1 
                 self.satiri_isle(satir)
-                
         except FileNotFoundError:
             self.log_yaz(f"[FATAL ERROR] {dosya_yolu} bulunamadı!")
             
