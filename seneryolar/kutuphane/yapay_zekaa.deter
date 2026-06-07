@@ -1,0 +1,8 @@
+// DeterCode Yapay Zeka Karar Mekanizması
+// Varsayılan hamle: Saldırı (1)
+dusman_hamlesi = 1
+
+// Eğer düşman canı kritik seviyeye (60) düşerse rastgele savunma veya can basma kararı al
+EGER dusman_can < 61
+RASTELE dusman_hamlesi = 2-3
+  
