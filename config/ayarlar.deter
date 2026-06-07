@@ -1,0 +1,5 @@
+// DeterCode Sistem ve Motor Yapılandırması
+oyun_zorluk = 3
+ses_seviyesi = 75
+yazdir "[CONFIG] Motor donanım ayarları başarıyla optimize edildi."
+  
