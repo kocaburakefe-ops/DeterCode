@@ -49,7 +49,7 @@ class DeterCodeMotoru:
     def satiri_isle(self, satir):
         satir = satir.strip()
         
-        # 1. Yorum Satırlarını Atla
+        # 1. Yorum Satırlarını ve Boşlukları Atla
         if not satir or satir.startswith("//"):
             return
 
@@ -58,7 +58,9 @@ class DeterCodeMotoru:
             dosya_yolu = satir.split(" ")[1]
             if dosya_yolu not in self.kutuphaneler:
                 self.kutuphaneler.append(dosya_yolu)
-                print(f"[SİSTEM] {dosya_yolu} kütüphanesi çekirdeğe yüklendi.")
+                print(f"[ÇEKİRDEK] {dosya_yolu} sisteme entegre edildi.")
+                # Dahil edilen dosyayı hemen arka planda okuyup sisteme katıyoruz
+                self.dosya_calistir(dosya_yolu)
 
         # 3. EKRANI TEMİZLE
         elif satir == "ekrani_temle":
@@ -67,25 +69,37 @@ class DeterCodeMotoru:
         # 4. YAZDIR Komutu
         elif satir.startswith("yazdir"):
             mesaj = satir.replace("yazdir", "").strip().replace('"', '')
-            mesaj = self.degiskenleri_coz(mesaj) # Eğer içinde değişken varsa değere çevir
+            mesaj = self.degiskenleri_coz(mesaj)
             print(mesaj)
 
-        # 5. DOSYAYA YAZ Komutu (Loglama)
-        elif satir.startswith("dosyaya_yaz"):
-            # Örn: dosyaya_yaz "savas_gunlugu.txt" "Hamle yapıldı"
-            parcalar = satir.split('"', 3)
-            if len(parcalar) >= 4:
-                dosya_adi = parcalar[1]
-                icerik = parcalar[3]
-                self.dosyaya_yaz(dosya_adi, icerik)
+        # 5. EGER (IF) Mekanizması - Mantıksal Çekirdek
+        elif satir.startswith("EGER"):
+            sart = satir.replace("EGER", "").strip()
+            # Değişkenleri sayılara çevir (Örn: "100 <= 0")
+            sart_cozulmus = self.degiskenleri_coz(sart)
+            try:
+                # Python'un işlemcisine soruyoruz: Bu şart doğru mu?
+                sonuc = eval(sart_cozulmus)
+                if sonuc:
+                    print(f"[MANTIK] Şart sağlandı: {sart}")
+                else:
+                    print(f"[MANTIK] Şart sağlanmadı, atlanıyor: {sart}")
+            except Exception as e:
+                print(f"[MANTIK HATASI] Şart anlaşılamadı: {sart}")
 
-        # 6. BEKLE Komutu (Zamanlayıcı)
-        elif satir.startswith("bekle"):
-            sure = int(satir.split(" ")[1])
-            time.sleep(sure)
+        # 6. YETENEK ÇAĞIR (Fonksiyon Tetikleyici)
+        elif satir.startswith("yetenek_cagir"):
+            parcalar = satir.split(" ")
+            yetenek_adi = parcalar[1]
+            print(f"[SİSTEM] {yetenek_adi} yeteneği ateşleniyor...")
+            
+            # Parametreler varsa onları da yakala (Örn: kahraman_can dusman_can)
+            if len(parcalar) > 2:
+                parametreler = parcalar[2:]
+                print(f"[SİSTEM] İletilen Veriler: {parametreler}")
 
         # 7. Matematik ve Atama işlemleri
-        elif "=" in satir:
+        elif "=" in satir and "EGER" not in satir:
             self.matematik_isleme(satir)
 
     def dosya_calistir(self, dosya_yolu):
@@ -126,6 +140,6 @@ if __name__ == "__main__":
     # Motor kendi kendini test etsin
     motor.sistem_kontrol()
     
-    # Şimdilik sadece ana dosyayı çalıştırıyoruz
+    # Ana dosyayı çalıştırarak sistemi ayaklandır
     motor.dosya_calistir("senaryolar/saf_guc.deter")
     
