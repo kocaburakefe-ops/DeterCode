@@ -1,28 +1,27 @@
-yazdir "=== DETERCODE ECOSYSTEM V3.0 START ==="
+yazdir "=== DETERCODE RUNTIME V4.0 DYNAMIC BATTLE ==="
 
-// Yapılandırma ve eski kayıtları yükle
-DAHİL_ET config/ayarlar.deter
 VERI_YUKLE
+DAHİL_ET kutuphane/rastgelelik.deter
 
-DAHİL_ET kutuphane/temel_hareketler.deter
-DAHİL_ET kutuphane/boss_ai.deter
-DAHİL_ET kutuphane/matematik.deter
-DAHİL_ET kutuphane/gorsel.deter
+yazdir "Savaş Başlıyor! Düşman Canı: dusman_can"
 
-yazdir "--- DÖNGÜ ÖNCESİ DURUM: Can: kahraman_can ---"
+ETİKET SAVAŞ_ALANI
+// Her turda rastgele hasar üret
+RASTELE son_hasar = 25-60
+dusman_can = dusman_can - son_hasar
 
-// C++ TARZI GOTO DÖNGÜSÜ (Can 150'ye ulaşana kadar döner)
-ETİKET CAN_DÖNGÜSÜ
-kahraman_can = kahraman_can + 15
-yazdir "[DÖNGÜ İÇİ] Kahraman şifalanıyor... Anlık Can: kahraman_can"
-BEKLE 0.3
+yazdir "[SALDIRI] Ejderhaya son_hasar değerinde vuruldu! Kalan Ejderha Canı: dusman_can"
+BEKLE 0.5
 
-EGER kahraman_can < 150
-GOTO CAN_DÖNGÜSÜ
+// Düşman hala hayattaysa döngünün başına sıçra
+EGER dusman_can > 0
+GOTO SAVAŞ_ALANI
 
-yazdir "--- DÖNGÜDEN BAŞARIYLA ÇIKILDI ---"
+yazdir "=== EJDERHA KATLEDİLDİ! ==="
 
-// Güncel veriyi diske kaydet
+// Hata kalkanı testi (Bilinçli saçma işlem - motor sıfır atayıp devam edecek)
+kahraman_xp = kahraman_xp + (kırık_veri * 10)
+
 VERI_KAYDET
+yazdir "=== SİMÜLASYON BAŞARIYLA SONUÇLANDI ==="
 
-yazdir "=== SİSTEM SÜRECİ TAMAMLADI ==="
