@@ -1,20 +1,19 @@
 import os
 import time
 import json
-import random  # V4.0 ile eklenen şans çekirdeği
+import random
 
 class DeterCodeMotoru:
     def __init__(self):
         self.bellek = {
             "kahraman_can": 100,
             "kahraman_max_can": 100,
-            "kahraman_xp": 0,
-            "kahraman_seviye": 1,
-            "dusman_can": 150,
-            "dusman_ofke": 0,
-            "oyun_zorluk": 1,
-            "ses_seviyesi": 80,
-            "son_hasar": 0  # Yeni dinamik değişken
+            "kahraman_hasar": 30,
+            "dusman_can": 200,
+            "dusman_max_can": 200,
+            "dusman_hamlesi": 0, # AI'ın karar kodu
+            "secim": 0,          # Oyuncu girdisi için
+            "son_hasar": 0
         }
         self.kutuphaneler = []
         self.satir_atla = False
@@ -39,7 +38,7 @@ class DeterCodeMotoru:
         return metin
 
     def matematik_isleme(self, satir):
-        if "=" in satir and "EGER" not in satir and "RASTELE" not in satir:
+        if "=" in satir and not any(k in satir for k in ["EGER", "RASTELE", "GIRDI"]):
             parcalar = satir.split("=")
             degisken_adi = parcalar[0].strip()
             islem = parcalar[1].strip()
@@ -49,11 +48,10 @@ class DeterCodeMotoru:
                 yeni_deger = eval(islem_cozulmus)
                 if isinstance(yeni_deger, (int, float)):
                     self.bellek[degisken_adi] = yeni_deger
-                    self.log_yaz(f"[BELLEK GÜNCELLENDİ] {degisken_adi} -> {yeni_deger}")
+                    self.log_yaz(f"[BELLEK] {degisken_adi} -> {yeni_deger}")
             except Exception:
-                # V4.0 Self-Healing: Çökmek yerine güvenli bir fallback ataması yapar
                 self.bellek[degisken_adi] = 0
-                self.log_yaz(f"[ANOMALİ YAKALANDI] '{satir}' hesaplanamadı! Güvenlik gereği 0 atandı.")
+                self.log_yaz(f"[ANOMALİ] '{satir}' sıfırlandı.")
 
     def satiri_isle(self, satir):
         satir = satir.strip()
@@ -69,7 +67,7 @@ class DeterCodeMotoru:
             dosya_yolu = satir.split(" ")[1]
             if dosya_yolu not in self.kutuphaneler:
                 self.kutuphaneler.append(dosya_yolu)
-                self.log_yaz(f"[SİSTEM MODÜLÜ] {dosya_yolu} enjekte ediliyor...")
+                self.log_yaz(f"[MODÜL] {dosya_yolu} yükleniyor...")
                 alt_motor = DeterCodeMotoru()
                 alt_motor.bellek = self.bellek
                 alt_motor.dosya_calistir(dosya_yolu)
@@ -89,58 +87,44 @@ class DeterCodeMotoru:
                 else:
                     self.satir_atla = True
             except Exception:
-                self.log_yaz(f"[MANTIK ANOMALİSİ] Şart çözülemedi, satır atlanıyor: {sart}")
                 self.satir_atla = True
 
-        # V4.0 RASTELE MİMARİSİ (Kullanım: RASTELE son_hasar = 15-45)
         elif satir.startswith("RASTELE"):
             try:
                 parcalar = satir.replace("RASTELE", "").strip().split("=")
                 degisken_adi = parcalar[0].strip()
                 aralik = parcalar[1].strip().split("-")
-                
                 min_deg = int(self.degiskenleri_coz(aralik[0].strip()))
                 max_deg = int(self.degiskenleri_coz(aralik[1].strip()))
-                
                 rastgele_sonuc = random.randint(min_deg, max_deg)
                 self.bellek[degisken_adi] = rastgele_sonuc
-                self.log_yaz(f"[ZAR ATILDI] RASTELE {degisken_adi} -> {rastgele_sonuc} ({min_deg}-{max_deg} arası)")
-            except Exception as e:
-                self.log_yaz(f"[ŞANS HATASI] Rastgele sayı üretim şablonu hatalı: {satir} | {e}")
+                self.log_yaz(f"[ZAR] RASTELE {degisken_adi} -> {rastgele_sonuc}")
+            except Exception:
+                pass
+
+        # V5.0 DİNAMİK GİRDİ SİSTEMİ (Kullanım: GIRDI secim)
+        elif satir.startswith("GIRDI"):
+            degisken_adi = satir.split(" ")[1].strip()
+            try:
+                kullanici_girdisi = input(">> Seçiminiz: ")
+                self.bellek[degisken_adi] = int(kullanici_girdisi)
+            except ValueError:
+                self.bellek[degisken_adi] = 0 # Geçersiz girdi koruması
 
         elif satir.startswith("BEKLE"):
             saniye = float(satir.split(" ")[1])
             time.sleep(saniye)
 
         elif satir == "DURDUR":
-            self.log_yaz("[KAPATMA] Çekirdek güvenli modda kapatılıyor.")
+            self.log_yaz("[KAPATMA] Motor durduruldu.")
             exit(0)
 
         elif satir.startswith("GOTO"):
             hedef_etiket = satir.split(" ")[1]
             if hedef_etiket in self.etiketler:
                 self.ip = self.etiketler[hedef_etiket]
-            else:
-                self.log_yaz(f"[MANTIK HATASI] Etiket bulunamadı: '{hedef_etiket}'")
 
-        elif satir == "VERI_KAYDET":
-            with open("kayit/save_data.json", "w", encoding="utf-8") as f:
-                json.dump(self.bellek, f, indent=4)
-            self.log_yaz("[DEPOLAMA] Karakter verileri JSON dosyasına mühürlendi.")
-
-        elif satir == "VERI_YUKLE":
-            try:
-                with open("kayit/save_data.json", "r", encoding="utf-8") as f:
-                    self.bellek.update(json.load(f))
-                self.log_yaz("[DEPOLAMA] Kayıtlı veriler başarıyla belleğe geri yüklendi.")
-            except FileNotFoundError:
-                pass
-
-        elif satir.startswith("yetenek_cagir"):
-            yetenek_adi = satir.split(" ")[1]
-            self.log_yaz(f"[YETENEK TETİKLENDİ] ===> {yetenek_adi.upper()} <===")
-
-        elif "=" in satir and "EGER" not in satir and "RASTELE" not in satir:
+        elif "=" in satir and not any(k in satir for k in ["EGER", "RASTELE", "GIRDI"]):
             self.matematik_isleme(satir)
 
     def dosya_calistir(self, dosya_yolu):
@@ -158,5 +142,5 @@ class DeterCodeMotoru:
                 self.ip += 1 
                 self.satiri_isle(satir)
         except FileNotFoundError:
-            self.log_yaz(f"[FATAL ERROR] {dosya_yolu} bulunamadı!")
+            self.log_yaz(f"[HATA] {dosya_yolu} yok!")
             
