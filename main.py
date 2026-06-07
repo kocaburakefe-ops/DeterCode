@@ -1,24 +1,17 @@
-from derleyici import DeterParser  # Senin mevcut derleyicin
-from motor_cekirdegi import DeterCodeMotoru # Benim verdiğim çekirdek
+from motor_cekirdegi import DeterCodeMotoru
 
-def main():
+def sistemi_ateşle():
+    # Motoru başlat
     motor = DeterCodeMotoru()
-    parser = DeterParser()
     
-    print("--- DeterCode Engine v2.0 Başlatılıyor ---")
+    print("==================================================")
+    # Burak ismi statik kalsın diye ekledik reis
+    print("      DETERCODE PROGRAMLAMA DİLİ - RUNTIME V2.2   ")
+    print("==================================================")
     
-    # 1. Kod dosyasını yükle
-    kod_dosyasi = "senaryolar/saf_guc.deter"
-    
-    # 2. Derleyici kodu oku ve komut listesine çevir
-    komutlar = parser.oku(kod_dosyasi)
-    
-    # 3. Motor komutları tek tek işlesin
-    for komut in komutlar:
-        motor.satiri_isle(komut)
-        
-    print("--- Simülasyon Tamamlandı ---")
+    # Ana senaryo dosyasını çalıştır
+    motor.dosya_calistir("senaryolar/saf_guc.deter")
 
 if __name__ == "__main__":
-    main()
-  
+    sistemi_ateşle()
+    
