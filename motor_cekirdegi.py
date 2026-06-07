@@ -11,10 +11,12 @@ class DeterCodeMotoru:
             "kahraman_hasar": 30,
             "dusman_can": 200,
             "dusman_max_can": 200,
-            "dusman_hamlesi": 0, # AI'ın karar kodu
-            "secim": 0,          # Oyuncu girdisi için
-            "son_hasar": 0
+            "dusman_hamlesi": 0,
+            "secim": 0,
+            "son_hasar": 0,
+            "gecici_cop": 999  # Çöp toplayıcıyı test etmek için
         }
+        self.yigin = []  # V6.0 Alt Seviye Stack Bellek (LIFO Mimari)
         self.kutuphaneler = []
         self.satir_atla = False
         self.etiketler = {}
@@ -24,7 +26,7 @@ class DeterCodeMotoru:
     def log_yaz(self, mesaj):
         timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
         log_mesaji = f"[{timestamp}] {mesaj}\n"
-        print(mesaj)
+        print(log_mesaji.strip())
         try:
             with open("logs/debug_log.txt", "a", encoding="utf-8") as f:
                 f.write(log_mesaji)
@@ -38,7 +40,7 @@ class DeterCodeMotoru:
         return metin
 
     def matematik_isleme(self, satir):
-        if "=" in satir and not any(k in satir for k in ["EGER", "RASTELE", "GIRDI"]):
+        if "=" in satir and not any(k in satir for k in ["EGER", "RASTELE", "GIRDI", "PUSH"]):
             parcalar = satir.split("=")
             degisken_adi = parcalar[0].strip()
             islem = parcalar[1].strip()
@@ -70,8 +72,10 @@ class DeterCodeMotoru:
                 self.log_yaz(f"[MODÜL] {dosya_yolu} yükleniyor...")
                 alt_motor = DeterCodeMotoru()
                 alt_motor.bellek = self.bellek
+                alt_motor.yigin = self.yigin
                 alt_motor.dosya_calistir(dosya_yolu)
                 self.bellek = alt_motor.bellek
+                self.yigin = alt_motor.yigin
 
         elif satir.startswith("yazdir"):
             mesaj = satir.replace("yazdir", "").strip().replace('"', '')
@@ -102,14 +106,42 @@ class DeterCodeMotoru:
             except Exception:
                 pass
 
-        # V5.0 DİNAMİK GİRDİ SİSTEMİ (Kullanım: GIRDI secim)
         elif satir.startswith("GIRDI"):
             degisken_adi = satir.split(" ")[1].strip()
             try:
                 kullanici_girdisi = input(">> Seçiminiz: ")
                 self.bellek[degisken_adi] = int(kullanici_girdisi)
             except ValueError:
-                self.bellek[degisken_adi] = 0 # Geçersiz girdi koruması
+                self.bellek[degisken_adi] = 0
+
+        # V6.0 YIĞIN (STACK) MİMARİSİ
+        elif satir.startswith("PUSH"):
+            deger_ham = satir.replace("PUSH", "").strip()
+            deger_cozulmus = self.degiskenleri_coz(deger_ham)
+            try:
+                deger = int(deger_cozulmus)
+            except ValueError:
+                deger = deger_cozulmus
+            self.yigin.append(deger)
+            self.log_yaz(f"[STACK PUSH] Yığına eklendi -> {deger} | Güncel Stack: {self.yigin}")
+
+        elif satir.startswith("POP"):
+            degisken_adi = satir.replace("POP", "").strip()
+            if self.yigin:
+                alınan_deger = self.yigin.pop()
+                self.bellek[degisken_adi] = alınan_deger
+                self.log_yaz(f"[STACK POP] Yığından çekildi -> {degisken_adi} = {alınan_deger}")
+            else:
+                self.log_yaz("[STACK ERROR] Yığın boş! POP işlemi başarısız.")
+
+        # V6.0 ÇÖP TOPLAYICI (GARBAGE COLLECTOR)
+        elif satir == "COP_TOPLA":
+            self.log_yaz("[GARBAGE COLLECTOR] Bellek taraması başlatıldı...")
+            silinecekler = [k for k, v in self.bellek.items() if v == 0 or "cop" in k]
+            for anahtar in silinecekler:
+                del self.bellek[anahtar]
+                self.log_yaz(f"[GC CLEAN] Boşa çıkan değişken RAM'den silindi: {anahtar}")
+            self.log_yaz(f"[GARBAGE COLLECTOR] Optimizasyon tamamlandı. Aktif bellek boyutu: {len(self.bellek)} alan.")
 
         elif satir.startswith("BEKLE"):
             saniye = float(satir.split(" ")[1])
@@ -124,7 +156,7 @@ class DeterCodeMotoru:
             if hedef_etiket in self.etiketler:
                 self.ip = self.etiketler[hedef_etiket]
 
-        elif "=" in satir and not any(k in satir for k in ["EGER", "RASTELE", "GIRDI"]):
+        elif "=" in satir and not any(k in satir for k in ["EGER", "RASTELE", "GIRDI", "PUSH"]):
             self.matematik_isleme(satir)
 
     def dosya_calistir(self, dosya_yolu):
