@@ -1,12 +1,5 @@
-YETENEK boss_karar_ver oyuncu_can
-    EGER oyuncu_can < 50
-        yazdir "BOSS: 'Zayıfladın, sonunu getiriyorum!'"
-        yetenek_cagir saldir "Oyuncu" 30
-    BITIR_EGER
+// DeterCode Boss Yapay Zeka Modülü
+yazdir "[KÜTÜPHANE] boss_ai.deter başarıyla yüklendi."
 
-    EGER oyuncu_can > 80
-        yazdir "BOSS: 'Hala çok enerjisin, seni yormam lazım!'"
-        yetenek_cagir geri_cekil
-    BITIR_EGER
-YETENEK_BITIR
-  
+dusman_ofke = dusman_ofke + 25
+yazdir "[YAPAY ZEKÂ] Ejderha sinirleniyor! Öfke seviyesi: dusman_ofke"
