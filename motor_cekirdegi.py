@@ -3,16 +3,17 @@ import time
 
 class DeterCodeMotoru:
     def __init__(self):
-        # KÜRESEL BELLEK
+        # KÜRESEL BELLEK (Sistem Hafızası)
         self.bellek = {
-            "kahraman_can": 60,       # Test için canı 60 yaptık (80'den küçük)
+            "kahraman_can": 100,
             "kahraman_max_can": 100,
             "kahraman_xp": 0,
             "kahraman_seviye": 1,
-            "dusman_can": 150
+            "dusman_can": 150,
+            "dusman_ofke": 0
         }
         self.kutuphaneler = []
-        self.satir_atla = False # Karar mekanizmasının tetikçisi
+        self.satir_atla = False
 
     def ekrani_temizle(self):
         os.system('cls' if os.name == 'nt' else 'clear')
@@ -22,11 +23,6 @@ class DeterCodeMotoru:
             if anahtar in metin:
                 metin = metin.replace(anahtar, str(deger))
         return metin
-
-    def dosyaya_yaz(self, dosya_adi, icerik):
-        icerik = self.degiskenleri_coz(icerik)
-        with open(dosya_adi, "a", encoding="utf-8") as dosya:
-            dosya.write(icerik + "\n")
 
     def matematik_isleme(self, satir):
         if "=" in satir and "EGER" not in satir:
@@ -43,27 +39,26 @@ class DeterCodeMotoru:
                     print(f"[BELLEK GÜNCELLENDİ] {degisken_adi} -> {yeni_deger}")
                 else:
                     print(f"[ÇEKİRDEK UYARISI] '{degisken_adi}' için geçersiz veri tipi!")
-            except Exception as e:
-                print(f"[ÇÖKME ENGELLENDİ] Matematik hatası savuşturuldu: {satir}")
+            except Exception:
+                print(f"[ÇÖKME ENGELLENDİ] Hatalı işlem atlandı: {satir}")
 
     def satiri_isle(self, satir):
         satir = satir.strip()
         
-        # Boş satırları ve yorumları direkt geç (atlama hakkını harcamasın)
         if not satir or satir.startswith("//"):
             return
 
-        # EĞER ŞART SAĞLANMADIYSA BU SATIRI ATLA
         if self.satir_atla:
-            self.satir_atla = False # Kilidi sıfırla
-            print(f"[MANTIK] Şart sağlanmadığı için bu satır çalıştırılmadı: '{satir}'")
+            self.satir_atla = False
+            print(f"[MANTIK] Şart sağlanmadığı için satır atlandı: '{satir}'")
             return
 
+        # DAHİL_ET KOMUTU
         if satir.startswith("DAHİL_ET"):
             dosya_yolu = satir.split(" ")[1]
             if dosya_yolu not in self.kutuphaneler:
                 self.kutuphaneler.append(dosya_yolu)
-                print(f"[SİSTEM] {dosya_yolu} çekirdeğe kaynaklandı.")
+                print(f"[SİSTEM MODÜLÜ] {dosya_yolu} sisteme yükleniyor...")
                 self.dosya_calistir(dosya_yolu)
 
         elif satir == "ekrani_temle":
@@ -74,26 +69,27 @@ class DeterCodeMotoru:
             mesaj = self.degiskenleri_coz(mesaj)
             print(mesaj)
 
-        # GERÇEK AKILLI MANTIK KONTROLÜ
+        # KONTROL AKIŞI (EGER)
         elif satir.startswith("EGER"):
             sart = satir.replace("EGER", "").strip()
             sart_cozulmus = self.degiskenleri_coz(sart)
             try:
                 sonuc = eval(sart_cozulmus)
                 if sonuc:
-                    print(f"[MANTIK] Şart DOĞRU: {sart} -> Alt satır tetiklenecek.")
+                    print(f"[MANTIK] Şart DOĞRU: {sart}")
                     self.satir_atla = False
                 else:
-                    print(f"[MANTIK] Şart YANLIŞ: {sart} -> Alt satır İPTAL edildi.")
-                    self.satir_atla = True # Bir sonraki komut satırını atla emirini ver
+                    print(f"[MANTIK] Şart YANLIŞ: {sart}")
+                    self.satir_atla = True
             except Exception:
-                print(f"[MANTIK HATASI] Şart çözülemedi, güvenlik amacıyla alt satır iptal: {sart}")
+                print(f"[MANTIK HATASI] Şart çözülemedi: {sart}")
                 self.satir_atla = True
 
+        # FONKSİYON TETİKLEYİCİ
         elif satir.startswith("yetenek_cagir"):
             parcalar = satir.split(" ")
             yetenek_adi = parcalar[1]
-            print(f"[YETENEK ATEŞLENDİ] ===> {yetenek_adi.upper()} <===")
+            print(f"[YETENEK TETİKLENDİ] ===> {yetenek_adi.upper()} <===")
 
         elif "=" in satir and "EGER" not in satir:
             self.matematik_isleme(satir)
@@ -106,14 +102,4 @@ class DeterCodeMotoru:
                     self.satiri_isle(satir)
         except FileNotFoundError:
             print(f"[FATAL ERROR] {dosya_yolu} bulunamadı!")
-
-# --- MOTORU BAŞLATMA TESTİ ---
-if __name__ == "__main__":
-    motor = DeterCodeMotoru()
-    print("========================================")
-    print("   DETERCODE CORE V2.2 CONTROL FLOW")
-    print("========================================")
-    
-    print("\n--- SİMÜLASYON BAŞLIYOR ---\n")
-    motor.dosya_calistir("senaryolar/saf_guc.deter")
-    
+            
