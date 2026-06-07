@@ -1,0 +1,4 @@
+// DeterCode Matematik Kütüphanesi
+kahraman_xp = kahraman_xp + (kahraman_seviye * 15)
+yazdir "[MATEMATİK] Seviye bonus çarpanı hesaplandı. Güncel XP: kahraman_xp"
+  
