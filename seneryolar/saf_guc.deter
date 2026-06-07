@@ -1,15 +1,11 @@
-yazdir "=== MOTOR ZIRHI TEST EDILIYOR ==="
+yazdir "=== KONTROL AKISI TESTI ==="
 
-// Normal İşlem: Canı 20 azalt
-kahraman_can = kahraman_can - 20
-yazdir "Kahraman hasar aldı! Güncel Can: kahraman_can"
+// TEST 1: Şartın DOĞRU olması durumu (kahraman_can 60 olduğu için 80'den küçüktür)
+EGER kahraman_can < 80
+yetenek_cagir CAN_IKSIRI_KULLAN
 
-// ZIRH TESTİ: Hatalı işlem veriyoruz (Motorun çökmemesi lazım)
-kahraman_can = kahraman_can + zehirli_ok
+// TEST 2: Şartın YANLIŞ olması durumu (60, 20'den küçük değildir)
+EGER kahraman_can < 20
+yetenek_cagir ACIL_ISINLANMA
 
-// Şart kontrolü: Sistem hala hayatta mı?
-EGER kahraman_can <= 80
-yetenek_cagir IYILESTIRME_SISTEMI
-
-yazdir "=== SISTEM COKMEDEN TESTI TAMAMLADI ==="
-
+yazdir "=== TEST BAŞARIYLA TAMAMLANDI ==="
