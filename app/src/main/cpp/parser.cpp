@@ -5,22 +5,32 @@
 
 void hesapla(std::stringstream& ss);
 
-// IF mekanizması için durumu takip eden global kontrol kilitleri
+// IF-ELSE mekanizması için kontrol kilitleri
 bool ifModuAktif = false;
 bool sartDogruMu = true;
+bool elseGecildiMi = false;
 
 void komutIsle(std::string komut, std::stringstream& ss) {
-    // 1. Durum: Eğer bir IF bloğunun içindeysek ve şart yanlışsa, ENDIF gelene kadar hiçbir şeyi çalıştırma
-    if (ifModuAktif && !sartDogruMu) {
-        if (komut == "ENDIF") {
-            ifModuAktif = false;
-            sartDogruMu = true;
-            std::cout << "[DeterCode IF]: Blok sonuna gelindi, normal akisa donuluyor." << std::endl;
-        }
-        return; // Şart yanlış olduğu için komutu işlemeden çıkıyoruz
+    // 1. Durum: ELSE kelimesi geldiyse kutupları değiştiriyoruz
+    if (komut == "ELSE") {
+        elseGecildiMi = true;
+        sartDogruMu = !sartDogruMu; // Şart doğruysa artık yanlış, yanlışsa artık doğru kabul ediliyor
+        return;
     }
 
-    // 2. Durum: Normal Komut İşleme Alanı
+    if (komut == "ENDIF") {
+        ifModuAktif = false;
+        sartDogruMu = true;
+        elseGecildiMi = false;
+        return;
+    }
+
+    // 2. Durum: Eğer bir blok içindeysek ve şu anki geçerli şart yanlışsa komutu yut
+    if (ifModuAktif && !sartDogruMu) {
+        return;
+    }
+
+    // 3. Durum: Normal Komut İşleme Alanı
     if (komut == "LOG") {
         std::string arguman;
         ss >> arguman;
@@ -47,28 +57,22 @@ void komutIsle(std::string komut, std::stringstream& ss) {
         hesapla(ss);
     }
     else if (komut == "IF") {
-        // Format: IF beygir > 200
         std::string solArguman, karsilastirmaSimgesi, sagArguman;
         if (ss >> solArguman >> karsilastirmaSimgesi >> sagArguman) {
             ifModuAktif = true;
+            elseGecildiMi = false;
             int solDeger = degerGetir(solArguman);
             int sagDeger = degerGetir(sagArguman);
 
-            // Şart kontrolü yapılıyor
             if (karsilastirmaSimgesi == ">") sartDogruMu = (solDeger > sagDeger);
             else if (karsilastirmaSimgesi == "<") sartDogruMu = (solDeger < sagDeger);
             else if (karsilastirmaSimgesi == "==") sartDogruMu = (solDeger == sagDeger);
             else if (karsilastirmaSimgesi == "!=") sartDogruMu = (solDeger != sagDeger);
 
-            std::cout << "[DeterCode IF]: Karsilastirma yapildi -> " << solArguman << " (" << solDeger << ") " 
+            std::cout << "[DeterCode IF]: Karsilastirma -> " << solArguman << " (" << solDeger << ") " 
                       << karsilastirmaSimgesi << " " << sagArguman << " (" << sagDeger << ") -> " 
                       << (sartDogruMu ? "SART DOGRU" : "SART YANLIS") << std::endl;
         }
-    }
-    else if (komut == "ENDIF") {
-        // Şart doğru olduğunda tetiklenen ENDIF bloğu kapatma işlemi
-        ifModuAktif = false;
-        sartDogruMu = true;
     }
     else {
         std::cout << "[HATA]: Bilinmeyen komut -> " << komut << std::endl;
@@ -82,4 +86,3 @@ void runDeterCode(std::string kodSatiri) {
     ss >> komut;
     komutIsle(komut, ss);
 }
-
