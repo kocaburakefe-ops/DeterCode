@@ -1,0 +1,36 @@
+name: DeterCode Native Bulut Derleyici
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch: # İstediğinde elle de tetikleyebilmen için
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. Adım: GitHub repondaki tüm kodları bulut sunucusuna çekiyoruz
+    - name: Kodları Depodan Çek
+      uses: actions/checkout@v4
+
+    # 2. Adım: Buluttaki Linux'a saf C++ derleyicisini (g++) kurup motoru derliyoruz
+    - name: C++ Çekirdeğini Derle (V8.0 Native Engine)
+      run: |
+        g++ -O3 -o dtermotor motor_cekirdegi.cpp
+        echo "C++ Çekirdeği saf makine koduna başarıyla dönüştürüldü."
+
+    # 3. Adım: compiler.py modülünü çalıştırıp test senaryosunu paketliyoruz
+    - name: DeterCode Derleyicisini Çalıştır
+      run: |
+        python3 compiler.py senaryolar/evrimsel_savas.deter
+
+    # 4. Adım: Derlenen bağımsız paketleri ziplayıp sana indirilebilir hale getiriyoruz
+    - name: Native Çıktıları Paketle ve Hazırla
+      uses: actions/upload-artifact@v4
+      with:
+        name: DeterCode-Native-Paket
+        path: |
+          dist/
+          dtermotor
+          
