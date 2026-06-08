@@ -1,14 +1,16 @@
-# DeterCode IF-ELSE Beyin Testi
-SET e36_beygir = 180
+# DeterCode Döngü ve Krank Mili Testi
+SET tur = 1
 
-# Test: 180 beygir 200'den büyük mü? (Yanlış! O yüzden ELSE bloğu çalışmalı)
-IF e36_beygir > 200
-LOG Bu araba asfalta sigmaz! (IF BLOGU)
-ELSE
-LOG 180 beygir az kanka, bu arabaya acil yazilim atiyoruz! (ELSE BLOGU)
-SET e36_beygir = 250
-ENDIF
+# Döngü Başlıyor: Tur sayısı 5'ten küçük olduğu sürece dön!
+LOOP tur < 5
+LOG E36 pistte gazliyor! Su anki tur:
+LOG tur
 
-# Bakalım ELSE bloğunun içindeki SET komutu çalışmış mı?
-LOG Güncel motor gücü kontrol ediliyor...
-LOG e36_beygir
+# Her tur bittiğinde tur sayısını 1 artırıyoruz (Pistonu itiyoruz)
+CALC tur = tur + 1
+ENDLOOP
+
+# Döngü kırıldıktan sonra akış buradan devam etmeli
+LOG Döngü basariyla bitti, araba pit alanina girdi.
+LOG Son durum tur sayisi:
+LOG tur
