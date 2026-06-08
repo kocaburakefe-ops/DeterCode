@@ -2,12 +2,11 @@
 #include <string>
 #include <sstream>
 #include <map>
-#include <jni.h>
 
-// 1. DİLİN HAFIZASI
+// 1. DİLİN HAFIZASI (BELLEK)
 std::map<std::string, int> bellek;
 
-// 2. KÜTÜPHANE KATMANI
+// 2. KÜTÜPHANE KATMANI (KOMUT İŞLEYİCİ)
 void komutIsle(std::string komut, std::stringstream& ss) {
     if (komut == "LOG") {
         std::string arguman;
@@ -47,15 +46,17 @@ void runDeterCode(std::string kodSatiri) {
     komutIsle(komut, ss);
 }
 
-// 4. ANDROID (JNI) KÖPRÜSÜ
-extern "C" JNIEXPORT jstring JNICALL
-Java_com_example_detercode_MainActivity_runDeter(JNIEnv* env, jobject /* this */, jstring kod) {
-    const char *nativeString = env->GetStringUTFChars(kod, 0);
-    std::string kodSatiri = nativeString;
+// 4. SAF KAN LINUX MARŞ MOTORU (MAIN)
+int main() {
+    std::cout << "=== DETERCODE MOTORU LINUX UZERINDE BASLATILDI ===" << std::endl;
     
-    runDeterCode(kodSatiri); 
+    // Test Komutlarımızı Motora Gönderiyoruz:
+    runDeterCode("SET beygir = 150");
+    runDeterCode("LOG beygir");
+    runDeterCode("LOG Sanayiye Selam Olsun!");
+    runDeterCode("CALC");
     
-    env->ReleaseStringUTFChars(kod, nativeString);
-    return env->NewStringUTF("DeterCode: Komut basariyla islendi!");
+    std::cout << "=== TESTLER BASARIYLA TAMAMLANDI ===" << std::endl;
+    return 0;
 }
 
