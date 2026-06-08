@@ -14,12 +14,9 @@ jobs:
     - name: Depodaki Kodları Çek
       uses: actions/checkout@v4
 
-    - name: C++ Derleyicisini Kontrol Et (g++)
-      run: g++ --version
-
-    - name: DeterCode Çekirdeğini Linux İçin Derle
+    - name: DeterCode Çekirdeğini Derle
       run: g++ -O3 app/src/main/cpp/motor_cekirdegi.cpp -o detercode_engine
 
-    - name: Motor Marşına Bas ve Test Et (Run DeterCode)
+    - name: Kendi Yazdığımız Scripti Çalıştır
       run: ./detercode_engine
       
