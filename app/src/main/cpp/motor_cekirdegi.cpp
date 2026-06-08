@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <fstream> // Dosya okumak için yeni kütüphanemiz
 #include <map>
 
 // 1. DİLİN HAFIZASI (BELLEK)
@@ -40,23 +41,29 @@ void komutIsle(std::string komut, std::stringstream& ss) {
 
 // 3. MOTOR KATMANI
 void runDeterCode(std::string kodSatiri) {
+    if (kodSatiri.empty() || kodSatiri[0] == '#') return; // Boş satırları ve yorum satırlarını atla
     std::stringstream ss(kodSatiri);
     std::string komut;
     ss >> komut;
     komutIsle(komut, ss);
 }
 
-// 4. SAF KAN LINUX MARŞ MOTORU (MAIN)
+// 4. DİNAMİK MARŞ MOTORU (Dosyadan Okuyan Main)
 int main() {
-    std::cout << "=== DETERCODE MOTORU LINUX UZERINDE BASLATILDI ===" << std::endl;
+    std::cout << "=== DETERCODE MOTORU SCRIPTI OKUMAYA BASLIYOR ===" << std::endl;
     
-    // Test Komutlarımızı Motora Gönderiyoruz:
-    runDeterCode("SET beygir = 150");
-    runDeterCode("LOG beygir");
-    runDeterCode("LOG Sanayiye Selam Olsun!");
-    runDeterCode("CALC");
-    
-    std::cout << "=== TESTLER BASARIYLA TAMAMLANDI ===" << std::endl;
+    std::ifstream dosya("kod.deter"); // Dışarıdaki kod dosyasını açıyoruz
+    if (!dosya.is_open()) {
+        std::cout << "[SISTEM HATASI]: kod.deter dosyasi bulunamadi!" << std::endl;
+        return 1;
+    }
+
+    std::string satir;
+    while (std::getline(dosya, satir)) {
+        runDeterCode(satir); // Dosyadaki her satırı tek tek motora yediriyoruz
+    }
+
+    dosya.close();
+    std::cout << "=== SCRIPT BASARIYLA ISTANBUL SEMALARINDA KOSULDU ===" << std::endl;
     return 0;
 }
-
