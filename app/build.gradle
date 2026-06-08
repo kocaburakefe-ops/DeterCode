@@ -1,0 +1,31 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.detercode.ide'
+    compileSdk 33
+
+    defaultConfig {
+        applicationId "com.detercode.ide"
+        minSdk 26
+        targetSdk 33
+        versionCode 1
+        versionName "1.0-Alpha"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    
+    // Ürettiğimiz C++ (.so) kütüphanesini gömeceğimiz yer
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['src/main/jniLibs']
+        }
+    }
+}
+
