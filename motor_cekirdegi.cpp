@@ -1,5 +1,5 @@
 // main.cpp veya DeterCodeMotoru.cpp
-#include "src/deter_lib.h" // Kütüphaneyi buraya çağırdık
+#include "deter_lib.h" // Kütüphaneyi buraya çağırdık
 
 
 // --- DETERCODE MOTORU: BEYİN KATMANI ---
