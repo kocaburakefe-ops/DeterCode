@@ -1,4 +1,4 @@
-name: DeterCode Native Bulut Derleyici
+name: DeterCode Android Native NDK Derleyici
 
 on:
   push:
@@ -6,27 +6,29 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  build-android:
     runs-on: ubuntu-latest
 
     steps:
     - name: Kodları Depodan Çek
       uses: actions/checkout@v4
 
-    - name: C++ Çekirdeğini Derle (V8.0 Native Engine)
-      run: |
-        g++ -O3 -std=c++17 -o dtermotor motor_cekirdegi.cpp
-        echo "C++ Çekirdeği saf makine koduna başarıyla dönüştürüldü."
+    - name: Android NDK Kurulumu
+      uses: android-actions/setup-android@v3
+      with:
+        api-level: 33
+        ndk-version: 25.2.9519653
 
-    - name: DeterCode Derleyicisini Çalıştır
+    - name: C++ Çekirdeğini Android ARM64 İçin Derle (.so Kütüphanesi)
       run: |
-        python3 compiler.py seneryolar/evrimsel_savas.deter
+        $ANDROID_NDK_ROOT/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android33-clang++ \
+        -O3 -shared -fPIC -std=c++17 \
+        -o libdtermotor.so motor_cekirdegi.cpp
+        echo "Android ARM64 için low-level native kütüphane (.so) başarıyla mühürlendi."
 
-    - name: Native Çıktıları Paketle ve Hazırla
+    - name: Native Kütüphaneyi Paketle ve Hazırla
       uses: actions/upload-artifact@v4
       with:
-        name: DeterCode-Native-Paket
-        path: |
-          dist/
-          dtermotor
-          
+        name: DeterCode-Android-Shared-Library
+        path: libdtermotor.so
+        
