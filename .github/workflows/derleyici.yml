@@ -13,7 +13,6 @@ jobs:
     - name: Kodları Depodan Çek
       uses: actions/checkout@v4
 
-    # İŞTE BURAYA -std=c++17 BAYRAĞINI ÇAKTIK REİS!
     - name: C++ Çekirdeğini Derle (V8.0 Native Engine)
       run: |
         g++ -O3 -std=c++17 -o dtermotor motor_cekirdegi.cpp
@@ -21,7 +20,7 @@ jobs:
 
     - name: DeterCode Derleyicisini Çalıştır
       run: |
-        python3 compiler.py senaryolar/evrimsel_savas.deter
+        python3 compiler.py seneryolar/evrimsel_savas.deter
 
     - name: Native Çıktıları Paketle ve Hazırla
       uses: actions/upload-artifact@v4
