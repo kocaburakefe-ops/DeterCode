@@ -1,3 +1,6 @@
+#include <jni.h>
+
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -200,5 +203,20 @@ int main(int argc, char* argv[]) {
     DeterCodeMotoru motor;
     motor.dosya_calistir(argv[1]);
     return 0;
+}
+
+
+
+extern "C" JNIEXPORT jstring JNICALL
+Java_com_detercode_ide_MainActivity_motoruAtesle(
+    JNIEnv* env,
+    jobject /* this */) {
+    
+    // BURADA SENİN MOTORU TETİKLEYECEĞİZ
+    // Örneğin senin motorunun ana fonksiyonu neyse onu çağırabiliriz.
+    // Şimdilik arayüze motorun hazır olduğu mesajını gönderiyoruz:
+    
+    std::string nativeMesaj = "[DeterEngine] 100+ Satırlık Çekirdek Motor Android NDK ile Bağlandı!";
+    return env->NewStringUTF(nativeMesaj.c_str());
 }
 
