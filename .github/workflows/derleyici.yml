@@ -36,7 +36,7 @@ jobs:
     - name: Güvenli Gradle Kurulumu
       uses: gradle/actions/setup-gradle@v3
       with:
-        gradle-version: 8.0
+        gradle-version: '8.2'
 
     - name: Android Uygulamasını Derle (APK Üret)
       run: gradle :app:assembleDebug --no-daemon
