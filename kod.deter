@@ -1,7 +1,18 @@
-# Bu benim kendi yazdığım dilin ilk resmi scriptidir!
-SET proje_gucu = 500
-LOG proje_gucu
+# DeterCode Karar Mekanizması Testi
 SET e36_beygir = 320
+
+# 1. Senaryo: Şartın DOĞRU olması durumu
+IF e36_beygir > 200
+LOG Bu araba asfalta sığmaz, canavar hazır!
+ENDIF
+
+# 2. Senaryo: Şartın YANLIŞ olması durumu (Bu blok komple atlanmalı)
+IF e36_beygir < 100
+LOG Bu araba sanayiden çıkamaz, beygir çok düşük.
+SET e36_beygir = 500
+ENDIF
+
+# Blokların dışındaki normal akış devam etmeli
+LOG Test bitti, e36_beygir hala kontrol ediliyor.
 LOG e36_beygir
-LOG Sanayiden sevgilerle, motor saat gibi!
-  
+
