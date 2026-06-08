@@ -36,11 +36,16 @@ jobs:
         -o app/src/main/jniLibs/arm64-v8a/libdtermotor.so motor_cekirdegi.cpp
         echo "[BAŞARILI] Saf C++ motoru ARM64 kütüphanesine mühürlendi."
 
+    - name: Gradle Wrapper Mekanizmasını Sıfırdan İnşa Et
+      run: |
+        cd app
+        gradle wrapper --gradle-version 8.0
+
     - name: Android Uygulamasını Derle (APK Üret)
       run: |
         cd app
-        chmod +x gradlew || true
-        gradle assembleDebug --no-daemon
+        chmod +x gradlew
+        ./gradlew assembleDebug --no-daemon
 
     - name: Hazır APK Dosyasını Serbest Bırak (Yayınla)
       uses: actions/upload-artifact@v4
