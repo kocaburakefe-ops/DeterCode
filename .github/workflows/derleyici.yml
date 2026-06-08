@@ -1,4 +1,4 @@
-name: DeterCode Android Native NDK Derleyici
+name: DeterCode Native IDE - Otomatik APK Derleyici
 
 on:
   push:
@@ -6,12 +6,18 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-android:
+  build-and-package:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Kodları Depodan Çek
+    - name: Depodaki Kodları Çek
       uses: actions/checkout@v4
+
+    - name: Java JDK 17 Kurulumu
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'zulu'
+        java-version: '17'
 
     - name: Android NDK Kurulumu
       uses: android-actions/setup-android@v3
@@ -19,16 +25,26 @@ jobs:
         api-level: 33
         ndk-version: 25.2.9519653
 
-    - name: C++ Çekirdeğini Android ARM64 İçin Derle (.so Kütüphanesi)
+    - name: JNI Klasör Yapısını Oluştur
+      run: |
+        mkdir -p app/src/main/jniLibs/arm64-v8a
+
+    - name: C++ Çekirdeğini Android ARM64 İçin Derle (.so)
       run: |
         $ANDROID_NDK_ROOT/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android33-clang++ \
         -O3 -shared -fPIC -std=c++17 \
-        -o libdtermotor.so motor_cekirdegi.cpp
-        echo "Android ARM64 için low-level native kütüphane (.so) başarıyla mühürlendi."
+        -o app/src/main/jniLibs/arm64-v8a/libdtermotor.so motor_cekirdegi.cpp
+        echo "[BAŞARILI] Saf C++ motoru ARM64 kütüphanesine mühürlendi."
 
-    - name: Native Kütüphaneyi Paketle ve Hazırla
+    - name: Android Uygulamasını Derle (APK Üret)
+      run: |
+        cd app
+        chmod +x gradlew || true
+        gradle assembleDebug --no-daemon
+
+    - name: Hazır APK Dosyasını Serbest Bırak (Yayınla)
       uses: actions/upload-artifact@v4
       with:
-        name: DeterCode-Android-Shared-Library
-        path: libdtermotor.so
+        name: DeterCode-Native-IDE-Uygulamasi
+        path: app/build/outputs/apk/debug/app-debug.apk
         
