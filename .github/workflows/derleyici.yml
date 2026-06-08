@@ -14,8 +14,8 @@ jobs:
     - name: Depodaki Kodları Çek
       uses: actions/checkout@v4
 
-    - name: DeterCode Çekirdeğini Derle
-      run: g++ -O3 app/src/main/cpp/motor_cekirdegi.cpp -o detercode_engine
+    - name: DeterCode Çekirdeğini Modüler Olarak Derle
+      run: g++ -O3 app/src/main/cpp/motor_cekirdegi.cpp app/src/main/cpp/matematik.cpp app/src/main/cpp/parser.cpp -o detercode_engine
 
     - name: Kendi Yazdığımız Scripti Çalıştır
       run: ./detercode_engine
