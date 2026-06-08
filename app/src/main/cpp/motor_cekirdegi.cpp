@@ -1,18 +1,18 @@
-#include <iostream>
-#include <string>
-#include <sstream>
-#include <map>
-#include <jni.h>
-
-// 1. DİLİN HAFIZASI (BELLEK)
-std::map<std::string, int> bellek;
-
 // 2. KÜTÜPHANE KATMANI (KOMUT İŞLEYİCİ)
 void komutIsle(std::string komut, std::stringstream& ss) {
     if (komut == "LOG") {
-        std::string mesaj;
-        std::getline(ss, mesaj);
-        std::cout << "[DeterCode LOG]: " << mesaj << std::endl;
+        std::string arguman;
+        ss >> arguman; // İlk kelimeyi alıyoruz (Değişken mi yoksa düz yazı mı?)
+
+        // Hafızayı kontrol et: Bu kelime bellek haritasında var mı?
+        if (bellek.find(arguman) != bellek.end()) {
+            std::cout << "[DeterCode LOG]: " << arguman << " = " << bellek[arguman] << std::endl;
+        } else {
+            // Eğer hafızada yoksa, düz yazıdır. Satırın geri kalanını al ve birleştir
+            std::string geriKalan;
+            std::getline(ss, geriKalan);
+            std::cout << "[DeterCode LOG]: " << arguman << geriKalan << std::endl;
+        }
     }
     else if (komut == "SET") {
         std::string degisken, esittir, deger;
@@ -32,22 +32,3 @@ void komutIsle(std::string komut, std::stringstream& ss) {
     }
 }
 
-// 3. MOTOR KATMANI
-void runDeterCode(std::string kodSatiri) {
-    std::stringstream ss(kodSatiri);
-    std::string komut;
-    ss >> komut;
-    komutIsle(komut, ss);
-}
-
-// 4. ANDROID (JNI) KÖPRÜSÜ
-extern "C" JNIEXPORT jstring JNICALL
-Java_com_example_detercode_MainActivity_runDeter(JNIEnv* env, jobject /* this */, jstring kod) {
-    const char *nativeString = env->GetStringUTFChars(kod, 0);
-    std::string kodSatiri = nativeString;
-    
-    runDeterCode(kodSatiri); 
-    
-    env->ReleaseStringUTFChars(kod, nativeString);
-    return env->NewStringUTF("DeterCode: Komut basariyla islendi!");
-}
