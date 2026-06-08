@@ -1,3 +1,34 @@
+// --- DETERCODE MOTORU: BEYİN KATMANI ---
+#include <iostream>
+#include <string>
+#include <vector>
+#include <sstream>
+
+void runDeterCode(std::string kodSatiri) {
+    std::stringstream ss(kodSatiri);
+    std::string komut;
+    ss >> komut; // İlk kelimeyi komut olarak al
+
+    if (komut == "LOG") {
+        std::string mesaj;
+        std::getline(ss, mesaj);
+        std::cout << "[DeterCode LOG]: " << mesaj << std::endl;
+    }
+    else if (komut == "SET") {
+        std::string degisken, esittir, deger;
+        ss >> degisken >> esittir >> deger;
+        std::cout << "[DeterCode SET]: " << degisken << " = " << deger << std::endl;
+    }
+    else if (komut == "CHECK") {
+        std::cout << "[DeterCode CHECK]: Mantik denetleniyor..." << std::endl;
+    }
+    else {
+        std::cout << "[HATA]: Tanimsiz komut -> " << komut << std::endl;
+    }
+}
+
+
+
 #include <jni.h>
 #include <iostream>
 #include <fstream>
@@ -52,6 +83,9 @@ public:
         std::stringstream ss(ham_kod);
         std::string satir;
         while (std::getline(ss, satir)) {
+           
+            runDeterCode(satir);
+           
             satirlar.push_back(satir);
         }
 
