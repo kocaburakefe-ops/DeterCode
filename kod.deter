@@ -1,18 +1,14 @@
-# DeterCode Karar Mekanizması Testi
-SET e36_beygir = 320
+# DeterCode IF-ELSE Beyin Testi
+SET e36_beygir = 180
 
-# 1. Senaryo: Şartın DOĞRU olması durumu
+# Test: 180 beygir 200'den büyük mü? (Yanlış! O yüzden ELSE bloğu çalışmalı)
 IF e36_beygir > 200
-LOG Bu araba asfalta sığmaz, canavar hazır!
+LOG Bu araba asfalta sigmaz! (IF BLOGU)
+ELSE
+LOG 180 beygir az kanka, bu arabaya acil yazilim atiyoruz! (ELSE BLOGU)
+SET e36_beygir = 250
 ENDIF
 
-# 2. Senaryo: Şartın YANLIŞ olması durumu (Bu blok komple atlanmalı)
-IF e36_beygir < 100
-LOG Bu araba sanayiden çıkamaz, beygir çok düşük.
-SET e36_beygir = 500
-ENDIF
-
-# Blokların dışındaki normal akış devam etmeli
-LOG Test bitti, e36_beygir hala kontrol ediliyor.
+# Bakalım ELSE bloğunun içindeki SET komutu çalışmış mı?
+LOG Güncel motor gücü kontrol ediliyor...
 LOG e36_beygir
-
