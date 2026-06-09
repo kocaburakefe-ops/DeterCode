@@ -1,1 +1,1 @@
-app/src/main/cpp/asm_core/* linguist-language=Assembly
+app/src/main/cpp/asm_core/arm64_injector.S linguist-language=Assembly
