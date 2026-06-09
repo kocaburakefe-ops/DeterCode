@@ -10,17 +10,19 @@ public class MainActivity extends AppCompatActivity {
     private HashMap<String, String> memoryCache = new HashMap<>();
 
     static {
+        // Uygulama ilk açıldığında C++ motorunu RAM'e yükleyen statik blok
         System.loadLibrary("detercode_native");
     }
 
+    // C++ tarafındaki kodlara doğrudan bağlanan köprü fonksiyonlarımız
     public native String stringFromJNI();
-    public native String getAsyncData(); // C++'taki yeni asenkron metoda bağlanan köprü
+    public native String getAsyncData(); 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        // Marşa basıyoruz ve akıllı pompayı test ediyoruz
+        // Marşa basıyoruz ve akıllı asenkron pompayı tetikliyoruz
         loadEngineData();
     }
 
@@ -30,24 +32,20 @@ public class MainActivity extends AppCompatActivity {
 
         // 1. Önce depoyu (Önbelleği) kontrol et
         if (memoryCache.containsKey(cacheKey)) {
-            // Eğer veri zaten varsa hiç motoru yorma, direkt depodan ver
+            // Eğer veri zaten varsa hiç motoru yorma, direkt depodan çek
             String cachedData = memoryCache.get(cacheKey);
-            // Hızlı teslimat!
         } else {
             // 2. Depo boşsa, arka plandaki C++ asenkron yakıt pompasını çalıştır
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    // C++ arka planda 2 saniye çalışır ama arayüzü asla kasmaz!
+                    // C++ arka planda çalışırken telefonun arayüzü sıfır hararetle yağ gibi akar!
                     final String freshData = getAsyncData();
                     
                     // Gelen taze veriyi hemen akıllı önbelleğe (depoya) atıyoruz
                     memoryCache.put(cacheKey, freshData);
-                    
-                    // İşlem bittiğinde ekranda veya logda gösterebilirsin
                 }
             }).start();
         }
     }
 }
-
