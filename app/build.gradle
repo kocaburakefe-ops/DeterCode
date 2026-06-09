@@ -2,9 +2,24 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        //noinspection JcenterRepositoryObsolete
+        jcenter() // Eski kütüphaneler için emniyet subabı
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.0.1'
+        // HİBRİT MOTOR KONTROLÜ (ECU)
+        // Çalışan Gradle sürümünü otomatik tespit eder ve doğru dişliyi takar
+        def runningGradleVersion = project.gradle.gradleVersion
+        
+        if (runningGradleVersion.startsWith("6.")) {
+            // Telefondaki emektar 6.1.1 motoru için güvenli mod
+            classpath 'com.android.tools.build:gradle:4.0.1'
+        } else if (runningGradleVersion.startsWith("7.")) {
+            // Ara nesil motorlar için geçiş köprüsü
+            classpath 'com.android.tools.build:gradle:7.4.2'
+        } else {
+            // Bulut garajındaki (GitHub Actions) Gradle 8.x canavarı için tam performans modu
+            classpath 'com.android.tools.build:gradle:8.2.2'
+        }
     }
 }
 
