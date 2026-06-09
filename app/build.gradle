@@ -1,29 +1,16 @@
-plugins {
-    id 'com.android.application' version '8.0.2'
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:4.0.1'
+    }
 }
 
-android {
-    namespace 'com.detercode.ide'
-    compileSdk 33
-
-    defaultConfig {
-        applicationId "com.detercode.ide"
-        minSdk 26
-        targetSdk 33
-        versionCode 1
-        versionName "1.0-Alpha"
-    }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
-    
-    sourceSets {
-        main {
-            jniLibs.srcDirs = ['src/main/jniLibs']
-        }
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
     }
 }
