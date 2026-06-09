@@ -3,7 +3,9 @@ package com.kocaburakefe.detercode;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.widget.Button;   // Butonları sisteme tanıtmak için bu cıvatayı sıktık usta!
 import android.widget.TextView; // Kaportadaki yazılara bağlanmak için bu cıvatayı ekledik!
+import android.widget.Toast;    // Ekrana anlık bildirim fırlatmak için ekledik!
 import androidx.appcompat.app.AppCompatActivity;
 import java.util.HashMap;
 
@@ -75,10 +77,55 @@ public class MainActivity extends AppCompatActivity {
 
         // Canlı gösterge panelinin şalterini kaldırıyoruz, akım başladı!
         dashboardHandler.post(dashboardRunnable);
-        
-        // ÖRNEK TEST: İleride butonlara bağlayacağımız o gizli Assembly silahını 
-        // arka planda test etmek istersen şimdilik burası çalıştırıp sonucu donanımdan koparır:
-        // int asmResult = triggerDirectAsm(); 
+
+        // =====================================================================
+        // PERFORMANS STAGE BUTONLARI BAĞLANTI TESİSATI (YENİ EKLEME)
+        // =====================================================================
+        Button btnStage0 = findViewById(R.id.btn_stage0);
+        Button btnStage1 = findViewById(R.id.btn_stage1);
+        Button btnStage2 = findViewById(R.id.btn_stage2);
+
+        // STAGE 0: Rölanti (ECO) Modu Şalteri
+        if (btnStage0 != null) {
+            btnStage0.setOnClickListener(new android.view.View.OnClickListener() {
+                @Override
+                public void onClick(android.view.View view) {
+                    Toast.makeText(MainActivity.this, "STAGE 0: MOTOR RÖLANTİDE (ECO)", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        // STAGE 1: Cadde (DENGELİ) Modu Şalteri
+        if (btnStage1 != null) {
+            btnStage1.setOnClickListener(new android.view.View.OnClickListener() {
+                @Override
+                public void onClick(android.view.View view) {
+                    loadEngineData(); // Bizim akıllı bellek tankını doldur usta!
+                    Toast.makeText(MainActivity.this, "STAGE 1: CADDE MODU AKTİF", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        // STAGE 2: Pist Modu - LİMİTÖR İPTALİ! 🏎️💨
+        if (btnStage2 != null) {
+            btnStage2.setOnClickListener(new android.view.View.OnClickListener() {
+                @Override
+                public void onClick(android.view.View view) {
+                    // 5. Dil devrede! Kendi odasındaki saf Assembly (ASM) koduna düz kontak yapıyoruz!
+                    int asmResult = triggerDirectAsm();
+                    
+                    // C++ stres testini ve çekirdek limitörlerini arka planda patlatıyoruz usta!
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            stressTestCPU();
+                        }
+                    }).start();
+
+                    Toast.makeText(MainActivity.this, "STAGE 2: LİMİTÖR İPTAL EDİLDİ! ASM DEĞERİ: " + asmResult, Toast.LENGTH_LONG).show();
+                }
+            });
+        }
     }
 
     private void loadEngineData() {
