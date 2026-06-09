@@ -1,69 +1,84 @@
 package com.kocaburakefe.detercode;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import androidx.appcompat.app.AppCompatActivity;
 import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
-    // Bizim akıllı önbellek tankımız (RAM Deposu)
     private HashMap<String, String> memoryCache = new HashMap<>();
+    
+    // Bizim saniyede 60 kez C++ kapısını çalacak olan o asenkron zamanlayıcı kablomuz
+    private Handler dashboardHandler = new Handler(Looper.getMainLooper());
+    private Runnable dashboardRunnable;
 
     static {
-        // Uygulama ilk açıldığında C++ motorunu RAM'e yükleyen statik blok
         System.loadLibrary("detercode_native");
     }
 
-    // C++ tarafındaki kodlara doğrudan bağlanan köprü fonksiyonlarımız
     public native String stringFromJNI();
     public native String getAsyncData(); 
-    public native String getHardwareInfo(); // 3. PAKET: C++ donanım köprüsüne bağlanan hat
-    public native String stressTestCPU();   // 3. PAKET DERİN UZANTI: İşlemciyi zorlayan C++ fonksiyonu
+    public native String getHardwareInfo();
+    public native String stressTestCPU();
+    public native String getLiveDashboardData(); // İŞTE YENİ ÇEKTİĞİMİZ CANLI VERİ KABLOSU!
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        // 2. PAKET: Marşa basıyoruz ve akıllı asenkron pompayı tetikliyoruz
         loadEngineData();
-
-        // 3. PAKET: C++ seviyesinden gelen düşük seviye donanım analizini ateşliyoruz
         String hardwareStatus = getHardwareInfo();
-        // Bu veri artık RAM'de; işlemci mimarisini ve toplam RAM'i direkt Linux çekirdeğinden okudu!
 
-        // 3. PAKET DERİN UZANTI: Doğrudan işlemcinin o anki çekirdeğine canlı testi gönderiyoruz!
-        new Thread(new Runnable() {
+        // ---------------------------------------------------------------------
+        // ELEKTRİK TESİSATI: Saniyede 60 kez C++ motorundan canlı veri çeken hat
+        // ---------------------------------------------------------------------
+        dashboardRunnable = new Runnable() {
             @Override
             public void run() {
-                // C++ en dipte işlemciyi test ederken, arayüz sıfır hararetle akmaya devam edecek
-                final String diagnosticReport = stressTestCPU();
+                // C++ kapısını çal, o anlık 3 veriyi (Çekirdek, Isı, RAM) tek paket olarak al
+                String rawData = getLiveDashboardData();
                 
-                // Rapor arka planda hazır usta!
+                // Gelen paketi virgüllerinden ayırıp kablolara dağıtıyoruz usta
+                String[] parts = rawData.split(",");
+                if (parts.length == 3) {
+                    String core = parts[0];
+                    String temp = parts[1];
+                    String ram  = parts[2];
+
+                    // BURASI ÖNEMLİ: Yarın bir gün tasarlayacağımız o fütüristik kadranların
+                    // ibrelerini tam olarak buradaki 'core, temp, ram' verileriyle oynatacağız!
+                }
+
+                // 16 milisaniye sonra (60 FPS hızında) bu döngüyü tekrar tetikle!
+                dashboardHandler.postDelayed(this, 16);
             }
-        }).start();
+        };
+
+        // Canlı gösterge panelinin şalterini kaldırıyoruz, akım başladı!
+        dashboardHandler.post(dashboardRunnable);
     }
 
-    // Akıllı Önbellek ve Pompa Kontrol Merkezi (2. Paket)
     private void loadEngineData() {
         String cacheKey = "fuel_status";
-
-        // 1. Önce depoyu (Önbelleği) kontrol et
         if (memoryCache.containsKey(cacheKey)) {
-            // Eğer veri zaten varsa hiç motoru yorma, direkt depodan çek
             String cachedData = memoryCache.get(cacheKey);
         } else {
-            // 2. Depo boşsa, arka plandaki C++ asenkron yakıt pompasını çalıştır
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    // C++ arka planda çalışırken telefonun arayüzü sıfır hararetle yağ gibi akar!
                     final String freshData = getAsyncData();
-                    
-                    // Gelen taze veriyi hemen akıllı önbelleğe (depoya) atıyoruz
                     memoryCache.put(cacheKey, freshData);
                 }
             }).start();
         }
     }
-}
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Telefon kapanırken veya uygulama arkaya atılırken akımı kes ki akü bitmesin usta!
+        dashboardHandler.removeCallbacks(dashboardRunnable);
+    }
+}
