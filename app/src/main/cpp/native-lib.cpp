@@ -87,3 +87,24 @@ Java_com_kocaburakefe_detercode_MainActivity_stressTestCPU(
     
     return env->NewStringUTF(report.c_str());
 }
+
+extern "C" JNIEXPORT jstring JNICALL
+Java_com_kocaburakefe_detercode_MainActivity_getLiveDashboardData(
+        JNIEnv* env,
+        jobject /* this */) {
+
+    // 1. Linux çekirdeğinden anlık aktif çekirdeği kapıyoruz
+    int activeCore = sched_getcpu();
+    
+    // 2. Şimdilik simüle edilmiş hararet ve RAM şamandıra verilerini ekliyoruz
+    // (Bir sonraki adımda buraları da tamamen Linux /sys/class/thermal yollarına bağlayacağız)
+    int temperature = 38 + (rand() % 5); // 38-42 derece arası canlı salınım
+    int ramUsage = 65 + (rand() % 3);    // %65-68 arası anlık RAM dalgalanması
+
+    // Verileri Java'nın rahatça çözebileceği bir paket (String) haline getiriyoruz
+    std::string liveReport = std::to_string(activeCore) + "," + 
+                             std::to_string(temperature) + "," + 
+                             std::to_string(ramUsage);
+
+    return env->NewStringUTF(liveReport.c_str());
+}
