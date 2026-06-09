@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0F0F13"
+    android:padding="20dp">
+
+    <LinearLayout
+        android:id="@+id/dashboard_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#16161E"
+        android:padding="15dp"
+        android:layout_marginTop="10dp"
+        android:elevation="4dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="DETER-DASHBOARD v1.0"
+            android:textColor="#00FF66"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="15dp"/>
+
+        <TextView
+            android:id="@+id/txt_active_core"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="AKTİF ÇEKİRDEK: RÖLANTİDE"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:layout_marginBottom="10dp"/>
+
+        <TextView
+            android:id="@+id/txt_temperature"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CPU HARARET: -- °C"
+            android:textColor="#FF3333"
+            android:textSize="16sp"
+            android:layout_marginBottom="10dp"/>
+
+        <TextView
+            android:id="@+id/txt_ram_usage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="RAM DEPO DOLULUK: --"
+            android:textColor="#00E5FF"
+            android:textSize="16sp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@id/dashboard_panel"
+        android:layout_marginTop="30dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PERFORMANS SEÇİMİ (STAGE)"
+            android:textColor="#888899"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="10dp"/>
+
+        <Button
+            android:id="@+id/btn_stage0"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:text="STAGE 0 - RÖLANTİ (ECO)"
+            android:backgroundTint="#22222B"
+            android:textColor="#888899"
+            android:layout_marginBottom="10dp"/>
+
+        <Button
+            android:id="@+id/btn_stage1"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:text="STAGE 1 - CADDE (DENGELİ)"
+            android:backgroundTint="#00E5FF"
+            android:textColor="#0F0F13"
+            android:layout_marginBottom="10dp"/>
+
+        <Button
+            android:id="@+id/btn_stage2"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:text="STAGE 2 - PİST (LİMİTÖR İPTALİ)"
+            android:backgroundTint="#FF3333"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"/>
+    </LinearLayout>
+
+</RelativeLayout>
+
