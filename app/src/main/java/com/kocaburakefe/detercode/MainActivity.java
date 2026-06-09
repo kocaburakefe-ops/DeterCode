@@ -17,7 +17,8 @@ public class MainActivity extends AppCompatActivity {
     // C++ tarafındaki kodlara doğrudan bağlanan köprü fonksiyonlarımız
     public native String stringFromJNI();
     public native String getAsyncData(); 
-    public native String getHardwareInfo(); // 3. PAKET: C++ donanım köprüsüne bağlanan yeni hat
+    public native String getHardwareInfo(); // 3. PAKET: C++ donanım köprüsüne bağlanan hat
+    public native String stressTestCPU();   // 3. PAKET DERİN UZANTI: İşlemciyi zorlayan C++ fonksiyonu
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +30,17 @@ public class MainActivity extends AppCompatActivity {
         // 3. PAKET: C++ seviyesinden gelen düşük seviye donanım analizini ateşliyoruz
         String hardwareStatus = getHardwareInfo();
         // Bu veri artık RAM'de; işlemci mimarisini ve toplam RAM'i direkt Linux çekirdeğinden okudu!
+
+        // 3. PAKET DERİN UZANTI: Doğrudan işlemcinin o anki çekirdeğine canlı testi gönderiyoruz!
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // C++ en dipte işlemciyi test ederken, arayüz sıfır hararetle akmaya devam edecek
+                final String diagnosticReport = stressTestCPU();
+                
+                // Rapor arka planda hazır usta!
+            }
+        }).start();
     }
 
     // Akıllı Önbellek ve Pompa Kontrol Merkezi (2. Paket)
@@ -54,3 +66,4 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 }
+
