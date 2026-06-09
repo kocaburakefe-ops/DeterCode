@@ -3,6 +3,7 @@ package com.kocaburakefe.detercode;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.widget.TextView; // Kaportadaki yazılara bağlanmak için bu cıvatayı ekledik!
 import androidx.appcompat.app.AppCompatActivity;
 import java.util.HashMap;
 
@@ -10,7 +11,7 @@ public class MainActivity extends AppCompatActivity {
 
     private HashMap<String, String> memoryCache = new HashMap<>();
     
-    // Bizim saniyede 60 kez C++ kapısını çalacak olan o asenkron zamanlayıcı kablomuz
+    // Saniyede 60 kez C++ kapısını çalacak olan asenkron zamanlayıcı hattımız
     private Handler dashboardHandler = new Handler(Looper.getMainLooper());
     private Runnable dashboardRunnable;
 
@@ -22,11 +23,19 @@ public class MainActivity extends AppCompatActivity {
     public native String getAsyncData(); 
     public native String getHardwareInfo();
     public native String stressTestCPU();
-    public native String getLiveDashboardData(); // İŞTE YENİ ÇEKTİĞİMİZ CANLI VERİ KABLOSU!
+    public native String getLiveDashboardData(); 
+    
+    // ---------------------------------------------------------------------
+    // 5. DİLİN ŞALTERİ: Doğrudan İşlemci Hücrelerine (ASM) Düz Kontak Yapan Hat!
+    // ---------------------------------------------------------------------
+    public native int triggerDirectAsm(); 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        // Önce senin oluşturduğun o fütüristik kaportayı (Layout) ekrana oturtuyoruz usta!
+        setContentView(R.layout.activity_main);
         
         loadEngineData();
         String hardwareStatus = getHardwareInfo();
@@ -40,15 +49,23 @@ public class MainActivity extends AppCompatActivity {
                 // C++ kapısını çal, o anlık 3 veriyi (Çekirdek, Isı, RAM) tek paket olarak al
                 String rawData = getLiveDashboardData();
                 
-                // Gelen paketi virgüllerinden ayırıp kablolara dağıtıyoruz usta
-                String[] parts = rawData.split(",");
+                // Gelen paketi virgüllerinden ayırıp kablolara dağıtıyoruz
+                final String[] parts = rawData.split(",");
                 if (parts.length == 3) {
-                    String core = parts[0];
-                    String temp = parts[1];
-                    String ram  = parts[2];
+                    // Arayüzü kasmadan, o neon göstergeleri canlı oynatmak için güvenli hatta geçiyoruz
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            // Kabloları activity_main.xml'deki göstergelere tek tek bağlıyoruz usta!
+                            TextView txtCore = findViewById(R.id.txt_active_core);
+                            TextView txtTemp = findViewById(R.id.txt_temperature);
+                            TextView txtRam = findViewById(R.id.txt_ram_usage);
 
-                    // BURASI ÖNEMLİ: Yarın bir gün tasarlayacağımız o fütüristik kadranların
-                    // ibrelerini tam olarak buradaki 'core, temp, ram' verileriyle oynatacağız!
+                            if (txtCore != null) txtCore.setText("AKTİF ÇEKİRDEK: CORE #" + parts[0]);
+                            if (txtTemp != null) txtTemp.setText("CPU HARARET: " + parts[1] + " °C");
+                            if (txtRam != null)  txtRam.setText("RAM DEPO DOLULUK: %" + parts[2]);
+                        }
+                    });
                 }
 
                 // 16 milisaniye sonra (60 FPS hızında) bu döngüyü tekrar tetikle!
@@ -58,6 +75,10 @@ public class MainActivity extends AppCompatActivity {
 
         // Canlı gösterge panelinin şalterini kaldırıyoruz, akım başladı!
         dashboardHandler.post(dashboardRunnable);
+        
+        // ÖRNEK TEST: İleride butonlara bağlayacağımız o gizli Assembly silahını 
+        // arka planda test etmek istersen şimdilik burası çalıştırıp sonucu donanımdan koparır:
+        // int asmResult = triggerDirectAsm(); 
     }
 
     private void loadEngineData() {
@@ -78,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // Telefon kapanırken veya uygulama arkaya atılırken akımı kes ki akü bitmesin usta!
+        // Uygulama kapanırken akımı kes ki akü bitmesin, kaçak elektrik kalmasın usta!
         dashboardHandler.removeCallbacks(dashboardRunnable);
     }
 }
