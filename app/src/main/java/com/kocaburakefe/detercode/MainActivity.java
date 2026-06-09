@@ -17,16 +17,21 @@ public class MainActivity extends AppCompatActivity {
     // C++ tarafındaki kodlara doğrudan bağlanan köprü fonksiyonlarımız
     public native String stringFromJNI();
     public native String getAsyncData(); 
+    public native String getHardwareInfo(); // 3. PAKET: C++ donanım köprüsüne bağlanan yeni hat
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        // Marşa basıyoruz ve akıllı asenkron pompayı tetikliyoruz
+        // 2. PAKET: Marşa basıyoruz ve akıllı asenkron pompayı tetikliyoruz
         loadEngineData();
+
+        // 3. PAKET: C++ seviyesinden gelen düşük seviye donanım analizini ateşliyoruz
+        String hardwareStatus = getHardwareInfo();
+        // Bu veri artık RAM'de; işlemci mimarisini ve toplam RAM'i direkt Linux çekirdeğinden okudu!
     }
 
-    // Akıllı Önbellek ve Pompa Kontrol Merkezi
+    // Akıllı Önbellek ve Pompa Kontrol Merkezi (2. Paket)
     private void loadEngineData() {
         String cacheKey = "fuel_status";
 
