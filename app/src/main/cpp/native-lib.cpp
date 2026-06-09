@@ -32,3 +32,28 @@ Java_com_kocaburakefe_detercode_MainActivity_getAsyncData(
     std::string finalData = futureResult.get();
     return env->NewStringUTF(finalData.c_str());
 }
+
+
+#include <sys/sysinfo.h> // Linux sistem bilgilerini okumak için emniyet subabı
+
+// YENİ ENJEKSİYON: İşlemcinin mimari yapısını ve çekirdek durumunu kontrol eder
+extern "C" JNIEXPORT jstring JNICALL
+Java_com_kocaburakefe_detercode_MainActivity_getHardwareInfo(
+        JNIEnv* env,
+        jobject /* this */) {
+    
+    #if defined(__arm64__) || defined(__aarch64__)
+        std::string cpuArch = "İşlemci Mimarisi: Safkan ARM64 Canavarı! 🦾";
+    #else
+        std::string cpuArch = "İşlemci Mimarisi: Standart/X86 Yapısı.";
+    #endif
+
+    // Linux çekirdeğinden sistem toplam RAM bilgisini çekiyoruz (Düşük seviye okuma)
+    struct sysinfo info;
+    if (sysinfo(&info) == 0) {
+        long totalRam = (info.totalram * info.mem_unit) / (1024 * 1024);
+        cpuArch += " | Toplam Sistem RAM: " + std::to_std::string(totalRam) + " MB";
+    }
+
+    return env->NewStringUTF(cpuArch.c_str());
+}
