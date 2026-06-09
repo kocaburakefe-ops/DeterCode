@@ -57,3 +57,33 @@ Java_com_kocaburakefe_detercode_MainActivity_getHardwareInfo(
 
     return env->NewStringUTF(cpuArch.c_str());
 }
+
+#include <sched.h>    // Linux çekirdeğinin işlemci zamanlama (CPU Scheduling) kütüphanesi
+#include <unistd.h>   // Sistem çağrıları için ana şalter
+
+extern "C" JNIEXPORT jstring JNICALL
+Java_com_kocaburakefe_detercode_MainActivity_stressTestCPU(
+        JNIEnv* env,
+        jobject /* this */) {
+
+    // 1. ADIM: Şu an hangi işlemci çekirdeğinin üzerindeyiz? Linux'tan onu öğreniyoruz.
+    int currentCore = sched_getcpu();
+    
+    std::string report = "DeterEngine Raporu: Marş basıldı. Şu an aktif olan çekirdek: Çekirdek #" + std::to_string(currentCore) + " \n";
+
+    // 2. ADIM: Dibi görelim! Seçilen çekirdeğe mikro saniyede milyonlarca döngü bindiriyoruz.
+    // Bu sırada telefon kasılmayacak çünkü 2. paketteki asenkron pompa (Thread) bunu arkada sırtlayacak.
+    double dummyValue = 123.45;
+    auto startTime = std::chrono::high_resolution_clock::now();
+    
+    for (int i = 0; i < 5000000; i++) {
+        dummyValue = dummyValue * 1.00001; // İşlemcinin kayan nokta (Floating Point) ünitesini zorluyoruz
+    }
+    
+    auto endTime = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
+
+    report += "-> 5 Milyon işlem " + std::to_string(duration) + " milisaniyede C++ ile eritildi! 🔥";
+    
+    return env->NewStringUTF(report.c_str());
+}
