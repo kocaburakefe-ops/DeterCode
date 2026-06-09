@@ -12,6 +12,18 @@ jobs:
     - name: Kodları Depodan Çek
       uses: actions/checkout@v4
 
+    # ==========================================================
+    # İŞTE O 127 DUVARINI YIKAN YENİ TESİSAT BURASI USTA!
+    # ==========================================================
+    - name: Python Kurulumu Yap (Şef İçin Tornavida)
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+
+    - name: Kule Otomasyonunu (Python Şefini) Tetikle
+      run: python deter_automation/build_shifter.py
+    # ==========================================================
+
     - name: Java Kurulumu Yap (Gradle İçin)
       uses: actions/setup-java@v4
       with:
