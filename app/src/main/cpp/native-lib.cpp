@@ -3,6 +3,15 @@
 #include <thread>
 #include <future>
 #include <chrono>
+#include <sys/sysinfo.h> // Linux sistem bilgilerini okumak için emniyet subabı
+#include <sched.h>       // Linux çekirdeğinin işlemci zamanlama kütüphanesi
+#include <unistd.h>      // Sistem çağrıları için ana şalter
+#include <cstdlib>       // rand() fonksiyonu için ekledik usta
+
+// =====================================================================
+// 1. ÖZELLİK: DIŞARIDAKİ ODADAN LİMİTÖR İPTAL ŞALTERİNİ ÇAĞIRIYORUZ
+// =====================================================================
+extern "C" void start_core_unclogging();
 
 // Arka planda (asenkron) yakıt pompalayan gizli fonksiyon
 std::string asyncFuelPump() {
@@ -33,9 +42,6 @@ Java_com_kocaburakefe_detercode_MainActivity_getAsyncData(
     return env->NewStringUTF(finalData.c_str());
 }
 
-
-#include <sys/sysinfo.h> // Linux sistem bilgilerini okumak için emniyet subabı
-
 // YENİ ENJEKSİYON: İşlemcinin mimari yapısını ve çekirdek durumunu kontrol eder
 extern "C" JNIEXPORT jstring JNICALL
 Java_com_kocaburakefe_detercode_MainActivity_getHardwareInfo(
@@ -52,27 +58,29 @@ Java_com_kocaburakefe_detercode_MainActivity_getHardwareInfo(
     struct sysinfo info;
     if (sysinfo(&info) == 0) {
         long totalRam = (info.totalram * info.mem_unit) / (1024 * 1024);
-        cpuArch += " | Toplam Sistem RAM: " + std::to_std::string(totalRam) + " MB";
+        // USTA: std::to_std::string hatası düzeltildi, jilet gibi std::to_string yapıldı!
+        cpuArch += " | Toplam Sistem RAM: " + std::to_string(totalRam) + " MB";
     }
 
     return env->NewStringUTF(cpuArch.c_str());
 }
-
-#include <sched.h>    // Linux çekirdeğinin işlemci zamanlama (CPU Scheduling) kütüphanesi
-#include <unistd.h>   // Sistem çağrıları için ana şalter
 
 extern "C" JNIEXPORT jstring JNICALL
 Java_com_kocaburakefe_detercode_MainActivity_stressTestCPU(
         JNIEnv* env,
         jobject /* this */) {
 
+    // -----------------------------------------------------------------
+    // LİMİTÖR İPTALİ TETİKLENİYOR: Bizim yeni müstakil odadaki isyanı başlatıyoruz!
+    // -----------------------------------------------------------------
+    start_core_unclogging();
+
     // 1. ADIM: Şu an hangi işlemci çekirdeğinin üzerindeyiz? Linux'tan onu öğreniyoruz.
     int currentCore = sched_getcpu();
     
-    std::string report = "DeterEngine Raporu: Marş basıldı. Şu an aktif olan çekirdek: Çekirdek #" + std::to_string(currentCore) + " \n";
+    std::string report = "DeterEngine Raporu: Marş basıldı. LİMİTÖRLER İPTAL! Aktif Çekirdek: #" + std::to_string(currentCore) + " \n";
 
     // 2. ADIM: Dibi görelim! Seçilen çekirdeğe mikro saniyede milyonlarca döngü bindiriyoruz.
-    // Bu sırada telefon kasılmayacak çünkü 2. paketteki asenkron pompa (Thread) bunu arkada sırtlayacak.
     double dummyValue = 123.45;
     auto startTime = std::chrono::high_resolution_clock::now();
     
@@ -96,8 +104,7 @@ Java_com_kocaburakefe_detercode_MainActivity_getLiveDashboardData(
     // 1. Linux çekirdeğinden anlık aktif çekirdeği kapıyoruz
     int activeCore = sched_getcpu();
     
-    // 2. Şimdilik simüle edilmiş hararet ve RAM şamandıra verilerini ekliyoruz
-    // (Bir sonraki adımda buraları da tamamen Linux /sys/class/thermal yollarına bağlayacağız)
+    // 2. Şimdilik simüle edilmiş hararet ve RAM şamandıra verilerini ekleyiyoruz
     int temperature = 38 + (rand() % 5); // 38-42 derece arası canlı salınım
     int ramUsage = 65 + (rand() % 3);    // %65-68 arası anlık RAM dalgalanması
 
