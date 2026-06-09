@@ -1,1 +1,1 @@
-*.deter linguist-language=DeterCode
+app/src/main/cpp/asm_core/* linguist-language=Assembly
