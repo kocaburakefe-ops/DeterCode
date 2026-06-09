@@ -1,0 +1,25 @@
+name: DeterCode Bulut Motoru Ateşleme
+
+on:
+  push:
+    branches: [ main ] # Sen ana koda her commit attığında çalışacak
+
+jobs:
+  run-detercode:
+    runs-on: ubuntu-latest # Ağır işçiliği yapacak Linux sunucusu
+
+    steps:
+    - name: Kodları Depodan Çek
+      uses: actions/checkout@v4
+
+    - name: C++ Derleyiciyi Hazırla
+      run: sudo apt-get update && sudo apt-get install -y g++
+
+    - name: DeterCode Motorunu Derle (Pistonları Topla)
+      run: |
+        g++ -std=c++17 main.cpp parser.cpp -o detercode_motor
+
+    - name: DeterCode Betiğini Çalıştır ve Çıktıyı Al
+      run: |
+        ./detercode_motor kod.deter
+        
