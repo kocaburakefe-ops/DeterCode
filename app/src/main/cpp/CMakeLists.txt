@@ -41,3 +41,18 @@ add_library(
     thermal_bypass.cpp
     ram_shifter.cpp
 )
+
+add_library(
+    detercode_native
+    SHARED
+    
+    # Eski canavarlar yerinde sabit kalıyor usta:
+    native-lib.cpp
+    core_unclogger.cpp
+    thermal_bypass.cpp
+    ram_shifter.cpp
+    nice_override.cpp
+    
+    # 5. VİTESİ SADECE EN ALTA EKLEYECEKSİN:
+    asm_neon_booster.cpp
+)
