@@ -12,7 +12,8 @@
 // =====================================================================
 // 1. ÖZELLİK: ÇEKİRDEK LİMİTÖR İPTAL ODASI (MÜSTAKİL DOSYADAKİ FONKSİYON)
 // =====================================================================
-extern "C" void start_core_unclogging();
+#include "core_unclogger.h"  // Bizim yeni limitör iptal şalterini ana motora jilet gibi bağlıyoruz!
+
 
 // Arka planda (asenkron) yakıt pompalayan gizli fonksiyon
 std::string asyncFuelPump() {
