@@ -4,18 +4,28 @@
 #include "thermal_bypass.h"
 
 int main() {
-    std::cout << "--- DeterEngine Marşa Basılıyor ---" << std::endl;
+    // 1. Karşılama ve Kontrol
+    std::cout << "--- DeterEngine Başlatılıyor ---" << std::endl;
     
-    // 1. Motoru optimize et
-    core_unclog_limits();
+    // 2. Modüllerin Çağrılması (Namespace yapısına uygun)
+    // Eğer modülleri DeterEngine:: namespace'ine aldıysan böyle çağır:
     
-    // 2. Isınmayı yönet
-    manage_thermal_limits(true);
-    
-    // 3. Otomotiv hattını dinle
-    start_can_bus_sniffing();
-    
-    std::cout << "--- Sistem Stabil, Gazlamaya Hazırız! ---" << std::endl;
+    try {
+        std::cout << "[System]: Motor limitleri kaldırılıyor..." << std::endl;
+        DeterEngine::Core::core_unclog_limits();
+        
+        std::cout << "[System]: Termal koruma aktif ediliyor..." << std::endl;
+        DeterEngine::Thermal::manage_thermal_limits(true);
+        
+        std::cout << "[System]: CAN Bus hattı dinlenmeye başlandı..." << std::endl;
+        DeterEngine::CAN::start_can_bus_sniffing();
+        
+        std::cout << "\n[DeterEngine]: Sistem Stabil, Gazlamaya Hazırız! 🚀" << std::endl;
+    } 
+    catch (...) {
+        std::cerr << "[CRITICAL]: Başlatma sırasında hata oluştu!" << std::endl;
+        return -1;
+    }
     
     return 0;
 }
