@@ -28,3 +28,16 @@ target_link_libraries(
         detercode_native
         ${log-lib})
         
+
+add_library(
+    detercode_native
+    SHARED
+    
+    # Mevcut ana motorlar
+    native-lib.cpp
+    core_unclogger.cpp
+    
+    # YENİ EKLEDİĞİN ODALAR (ALTA GELECEKLER USTA)
+    thermal_bypass.cpp
+    ram_shifter.cpp
+)
