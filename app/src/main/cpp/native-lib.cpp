@@ -1,22 +1,16 @@
 #include <jni.h>
 #include <string>
-#include <thread>
-#include <future>
 #include <chrono>
-#include <sys/sysinfo.h> // Linux sistem bilgilerini okumak için emniyet subabı
-#include <sched.h>       // Linux işlemci zamanlama (CPU Scheduling) kütüphanesi
-#include <unistd.h>      // Sistem çağrıları için ana şalter
+#include <sys/sysinfo.h> // Sistem RAM ve mimari şamandırası için
+#include <sched.h>       // sched_getcpu() için aktif kalacak
 #include <cstdlib>       // rand() fonksiyonu için
-#include <malloc.h>      // RAM'i kökünden boşaltacak malloc_trim şalteri için usta!
 
 // =====================================================================
-// 1. ÖZELLİK: ÇEKİRDEK LİMİTÖR İPTAL ODASI (MÜSTAKİL DOSYADAKİ FONKSİYON)
+// MODÜLER PERFORMANS ODALARI (YENİ FABRİKASYON BAĞLANTI)
 // =====================================================================
-#include "core_unclogger.h"  // Bizim yeni limitör iptal şalterini ana motora jilet gibi bağlıyoruz!
-
-#include "core_unclogger.h"
-#include "thermal_bypass.h"  // 2. Özelliğin şalterini ana motora bağladık!
-
+#include "core_unclogger.h"  // 1. Özellik: Çekirdek Limitör İptali
+#include "thermal_bypass.h"  // 2. Özellik: Real-Time Öncelik Bypass
+#include "ram_shifter.h"     // 3. Özellik: RAM Flush Shifter
 
 // Arka planda (asenkron) yakıt pompalayan gizli fonksiyon
 std::string asyncFuelPump() {
@@ -63,7 +57,7 @@ Java_com_kocaburakefe_detercode_MainActivity_getHardwareInfo(
 }
 
 // =====================================================================
-// 2. ve 3. ÖZELLİKLER BURADA TEZGÂHA ALINDI (MAIN DOSYASI İÇİ ENJEKSİYON)
+// STRESS TEST MOTORU - SAGE 2 TETİKLEYİCİSİ
 // =====================================================================
 extern "C" JNIEXPORT jstring JNICALL
 Java_com_kocaburakefe_detercode_MainActivity_stressTestCPU(
@@ -71,31 +65,18 @@ Java_com_kocaburakefe_detercode_MainActivity_stressTestCPU(
         jobject /* this */) {
 
     // -----------------------------------------------------------------
-    // 1. ADIM: 1. ÖZELLİK (Limitör İptali Başlatılıyor)
+    // 1, 2 ve 3. ÖZELLİKLER SIRAYLA ODALARINDAN ATEŞLENİYOR usta!
     // -----------------------------------------------------------------
-    start_core_unclogging();
-
-    // -----------------------------------------------------------------
-    // 2. ADIM: 2. ÖZELLİK (Real-Time Öncelik Enjeksiyonu)
-    // Sistem ısınsa bile bizim kodların önceliğini Linux'un en tepesindeki
-    // SCHED_FIFO (Real-Time) moduna alıyoruz. Telefon bizi kasamayacak!
-    // -----------------------------------------------------------------
-    struct sched_param param;
-    param.sched_priority = sched_get_priority_max(SCHED_FIFO);
-    sched_setscheduler(0, SCHED_FIFO, &param);
-
-    // -----------------------------------------------------------------
-    // 3. ADIM: 3. ÖZELLİK (RAM Flush Shifter)
-    // Android'in hafıza havuzundaki tüm çöp birikintilerini ve şişkinlikleri
-    // tek kalemde sisteme geri iade ediyoruz usta. RAM tertemiz!
-    // -----------------------------------------------------------------
-    malloc_trim(0); 
+    start_core_unclogging();          // 1. Vites: Limitör söküldü
+    apply_thermal_priority_bypass(); // 2. Vites: İşlemci Real-Time moduna kilitlendi
+    execute_ram_flush();             // 3. Vites: RAM'in ciğeri boşaltıldı
 
     // -----------------------------------------------------------------
     // RAPORLAMA VE STRESS MOTORU
     // -----------------------------------------------------------------
     int currentCore = sched_getcpu();
     std::string report = "DeterEngine Raporu: Marş Basıldı!\n";
+    report += "-> [Modüler Düzen]: Tüm canavarlar kendi özel odasında.\n";
     report += "-> [M8 Modu]: Çekirdek Limitörleri Söküldü.\n";
     report += "-> [Real-Time]: İşlemci Önceliği Zirveye Çekildi.\n";
     report += "-> [RAM Flush]: Bellek Şişkinliği Eritildi!\n";
@@ -123,7 +104,7 @@ Java_com_kocaburakefe_detercode_MainActivity_getLiveDashboardData(
 
     int activeCore = sched_getcpu();
     int temperature = 38 + (rand() % 5); 
-    int ramUsage = 61 + (rand() % 3); // RAM Flush attığımız için baz harareti/kullanımı biraz düşürdük usta!
+    int ramUsage = 61 + (rand() % 3); 
 
     std::string liveReport = std::to_string(activeCore) + "," + 
                              std::to_string(temperature) + "," + 
