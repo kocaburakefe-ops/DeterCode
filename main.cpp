@@ -1,34 +1,26 @@
-#include <jni.h>
-#include <string>
+#include <iostream>
 
-// --- 1. CORE MODÜLÜ ---
+// --- MOTOR FONKSİYONLARI ---
 void core_unclog_limits() {
-    // Motor limitleri kaldırıldı
+    std::cout << "[CORE]: Limitler iptal edildi." << std::endl;
 }
 
-// --- 2. TERMAL MODÜLÜ ---
 void manage_thermal_limits(bool active) {
-    // Termal bypass aktif
+    std::cout << "[THERMAL]: Bypass aktif." << std::endl;
 }
 
-// --- 3. HARDWARE MODÜLÜ ---
 void start_can_bus_sniffing() {
-    // CAN Bus hattı dinleniyor
+    std::cout << "[CAN]: Hat dinleniyor." << std::endl;
 }
 
-// --- ANDROID APK GİRİŞ NOKTASI (MAIN) ---
-// Android, standart "int main()" yerine bu JNI yapısını ister usta.
-extern "C" JNIEXPORT jstring JNICALL
-Java_com_detercode_deterengine_MainActivity_startEngine(
-    JNIEnv* env,
-    jobject /* this */) {
+// --- TELEFON İÇİN ANA GİRİŞ ---
+int main() {
+    std::cout << "DeterEngine Baslatiliyor..." << std::endl;
     
-    // Bizim motorun fonksiyonlarını sırayla tetikliyoruz
     core_unclog_limits();
     manage_thermal_limits(true);
     start_can_bus_sniffing();
-
-    // Android arayüzüne (Ekrana) gidecek başarı mesajı
-    std::string success_msg = "DeterEngine Çevrimiçi! Sistem Stabil, Gazlamaya Hazırız! 🚀";
-    return env->NewStringUTF(success_msg.c_str());
+    
+    std::cout << "Sistem Aktif! 🚀" << std::endl;
+    return 0;
 }
