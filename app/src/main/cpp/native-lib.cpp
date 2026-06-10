@@ -14,6 +14,9 @@
 // =====================================================================
 #include "core_unclogger.h"  // Bizim yeni limitör iptal şalterini ana motora jilet gibi bağlıyoruz!
 
+#include "core_unclogger.h"
+#include "thermal_bypass.h"  // 2. Özelliğin şalterini ana motora bağladık!
+
 
 // Arka planda (asenkron) yakıt pompalayan gizli fonksiyon
 std::string asyncFuelPump() {
