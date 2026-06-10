@@ -11,6 +11,11 @@
 #include "core_unclogger.h"  // 1. Özellik: Çekirdek Limitör İptali
 #include "thermal_bypass.h"  // 2. Özellik: Real-Time Öncelik Bypass
 #include "ram_shifter.h"     // 3. Özellik: RAM Flush Shifter
+#include "core_unclogger.h"
+#include "thermal_bypass.h"
+#include "ram_shifter.h"
+#include "nice_override.h"
+#include "asm_neon_booster.h"  // 5. Özelliğin şalterini de ana motora bağladık usta!
 
 // Arka planda (asenkron) yakıt pompalayan gizli fonksiyon
 std::string asyncFuelPump() {
