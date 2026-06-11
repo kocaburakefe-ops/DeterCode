@@ -1,58 +1,73 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <fstream> // Telefonda dosyaya yazabilmek için usta!
 
-// Kara kutuya kaydedilecek her bir olayın yapısı
-struct LogEntry {
-    std::string timestamp; // Hatanın/Olayın gerçekleştiği an
-    std::string file;      // Hangi kod dosyasında oldu (Örn: main.cpp)
-    int line;              // Kodun kaçıncı satırında oldu
-    std::string message;   // O an işlemcinin ne yaptığı (Örn: RAM'den yer istendi)
+struct AdvancedLog {
+    std::string time;
+    std::string file;
+    int line;
+    std::string level; // INFO, WARNING, CRITICAL
+    std::string msg;
+    size_t active_ram; // O an harcanan RAM miktarı
 };
 
 class BlackBox {
 private:
-    std::vector<LogEntry> flightRecorder; // Uçuş kayıt cihazı (RAM'deki gizli oda)
-    size_t maxCapacity;                   // Kutunun maksimum alacağı kayıt sayısı
-
-    // Telefonun saatini milisaniye cinsinden alan yardımcı fonksiyon
-    std::string getCurrentTime() {
-        // Normalde burada canlı saat fonksiyonu olur usta, şimdilik simüle ediyoruz
-        return "20:15:32.412"; 
-    }
+    std::vector<AdvancedLog> secureBuffer;
+    size_t maxEntries;
+    size_t currentRamUsage; // Motorun anlık RAM tüketimi takipçisi
 
 public:
-    BlackBox(size_t capacity = 500) {
-        maxCapacity = capacity;
-        std::cout << "[BLACKBOX]: " << maxCapacity << " kayit kapasiteli zirhli kara kutu devreye girdi!" << std::endl;
+    BlackBox(size_t capacity = 1000) : maxEntries(capacity), currentRamUsage(0) {
+        std::cout << "[⚡ BLACKBOX PRO]: Askeri standartta zırhlı koruma hücresi kuruldu!" << std::endl;
     }
 
-    // 🛠️ KARA KUTUYA ANLIK KAYIT YAZMA FONKSİYONU
-    // Bu makro benzeri yapı sayesinde hatanın olduğu DOSYAYI ve SATIRI otomatik çekeriz usta!
-    void record(const std::string& file, int line, const std::string& message) {
-        // Kutu dolduysa eski kayıtları temizle (Döngüsel kayıt)
-        if (flightRecorder.size() >= maxCapacity) {
-            flightRecorder.erase(flightRecorder.begin());
-        }
-
-        LogEntry entry = { getCurrentTime(), file, line, message };
-        flightRecorder.push_back(entry);
+    // RAM takibi için simülasyon fonksiyonu
+    void update_ram_metric(size_t bytes) {
+        currentRamUsage = bytes;
     }
 
-    // 🔥 SİSTEM PATLADIĞINDA AÇILACAK RAPOR (SUÇ MAHALLİ İNCELEME)
-    void dump_and_rescue() {
-        std::cout << "\n==================================================" << std::endl;
-        std::cout << "🚨🚨🚨 DETERENGINE ACİL DURUM: KARA KUTU AÇILIYOR 🚨🚨🚨" << std::endl;
-        std::cout << "==================================================" << std::endl;
-        std::cout << "[KUTU DURUMU]: Sistem cokmeden önceki son kayitlar:" << std::endl;
-
-        for (const auto& log : flightRecorder) {
-            std::cout << "⏱️ [" << log.timestamp << "] -> Dosya: " << log.file 
-                      << " (Satir: " << log.line << ") | Islem: " << log.message << std::endl;
+    // 🛠️ ZIRHLI KAYIT ALMA
+    void record(const std::string& file, int line, const std::string& level, const std::string& msg) {
+        if (secureBuffer.size() >= maxEntries) {
+            secureBuffer.erase(secureBuffer.begin()); // Eskileri sil, taze kayıtlara yer aç
         }
 
-        std::cout << "==================================================" << std::endl;
-        std::cout << "💡 BAŞMÜHENDİS TAVSİYESİ: En son satiri incele, hatayi yok et!" << std::endl;
-        std::cout << "==================================================\n" << std::endl;
+        AdvancedLog log = {"21:30:00", file, line, level, msg, currentRamUsage};
+        secureBuffer.push_back(log);
+
+        // Eğer hata CRITICAL (Ölümcül) ise, sistemin çökmesini bekleme, ŞALTERİ İNDİR!
+        if (level == "CRITICAL") {
+            trigger_panic_switch();
+        }
+    }
+
+private:
+    // 🔥 PANİK ŞALTERİ: SİSTEMİ ÇÖKMEDEN YAKALA VE DOSYAYA BAS
+    void trigger_panic_switch() {
+        std::cout << "\n[🚨🚨 CRITICAL PANIC DETECTED! SİSTEM KİLİTLENİYOR, VERİLER KURTARILIYOR... 🚨🚨]" << std::endl;
+        
+        // Telefonda veya bilgisayarda "deterengine_blackbox.txt" adında bir dosya açıp içine her şeyi kusuyoruz
+        std::ofstream file("deterengine_blackbox.txt");
+        if (file.is_open()) {
+            file << "=== DETERENGINE BLACKBOX FLIGHT RECORDER ===" << std::endl;
+            for (const auto& log : secureBuffer) {
+                file << "[" << log.time << "] [" << log.level << "] File: " << log.file 
+                     << " (Line: " << log.line << ") | RAM: " << log.active_ram << " Bytes | Msg: " << log.msg << std::endl;
+            }
+            file << "============================================" << std::endl;
+            file.close();
+            std::cout << "[💾 BLACKBOX]: Tüm suç mahalli 'deterengine_blackbox.txt' dosyasına mühürlendi! Güvendesiniz." << std::endl;
+        } else {
+            // Dosya açılamazsa ekrana bas usta, hiçbir şey kaybolmasın!
+            std::cout << "[ERROR]: Dosya yazılamadı, ekrana dökülüyor:" << std::endl;
+            for (const auto& log : secureBuffer) {
+                std::cout << "-> " << log.msg << std::endl;
+            }
+        }
+        
+        // Burada sistemi güvenli bir şekilde sonlandırıyoruz ki donanım zarar görmesin
+        exit(1); 
     }
 };
