@@ -1,68 +1,76 @@
 #include <iostream>
 #include <thread>
 
-// 🛠️ YAZDIĞIMIZ BÜTÜN ÇEKİRDEK (CORE) SİSTEMLERİ BAĞLIYORUZ
+// 🛠️ 1. KATMAN: DIAGNOSTICS & SYSTEM & POWER
 #include "Core/Diagnostics/blackbox.h"
 #include "Core/Power/nos_trigger.h"
 #include "Core/System/kernel_bridge.h"
+
+// 🛠️ 2. KATMAN: GRAPHICS & INPUT & CONCURRENCY
 #include "Core/Graphics/frame_pacer.h"
 #include "Core/Input/event_dispatcher.h"
 #include "Core/Concurrency/thread_worker.h"
 
-// Arka planda çalışacak örnek bir ağır yapay zeka görevi (16. Özellik için)
-void background_map_loading() {
-    std::cout << "[🧵 THREAD-TASK]: Harita verileri ve dokular arka planda yukleniyor..." << std::endl;
+// 🛠️ 3. KATMAN: AUDIO & RESOURCES & PHYSICS & MATH (YENİ EKİP)
+#include "Core/Audio/audio_mixer.h"
+#include "Core/Resources/asset_bundler.h"
+#include "Core/Physics/physics_solver.h"
+#include "Core/Math/deter_math.h"
+
+// Arka planda çalışacak örnek görev (Thread_Worker için)
+void background_asset_stream() {
+    std::cout << "[🧵 THREAD-TASK]: Arka planda yuksek boyutlu dokular isleniyor..." << std::endl;
 }
 
 int main() {
-    std::cout << "==================================================" << std::endl;
-    std::cout << "🚀 DETERENGINE V1.0 - ŞAMPİYONLAR LİGİ MARŞA BASIYOR 🚀" << std::endl;
-    std::cout << "==================================================" << std::endl;
+    std::cout << "==========================================================" << std::endl;
+    std::cout << "👑 DETERENGINE V1.0 - 20 OZELLIKLI SAFKAN MOTOR AYAKTA 👑" << std::endl;
+    std::cout << "==========================================================" << std::endl;
 
-    // 1. ADIM: Emniyet kemerimizi (Kara Kutuyu) ilk günden açıyoruz
+    // 🛡️ ADIM 1: Zırhlı Kara Kutuyu ve Temel Altyapıyı Başlat
     BlackBox blackbox;
-
-    // 2. ADIM: Diğer tüm sistemleri kara kutuya ve birbirine bağlıyoruz
-    NOSTrigger nos(blackbox);
     KernelBridge kernel(blackbox);
-    FramePacer pacer(60.0, blackbox); // Oyun ilk başta stabil 60 FPS başlasın
-    EventDispatcher input(blackbox);
     ThreadWorker worker(blackbox);
 
-    std::cout << "\n--- OYUN DÖNGÜSÜ (GAME LOOP) BAŞLADI ---" << std::endl;
+    // 📦 ADIM 2: Yeni Canavarları Devreye Al (Ses, Fizik, Kaynak Yönetimi)
+    AssetBundler bundler(blackbox);
+    AudioMixer audio(blackbox);
+    PhysicsSolver physics(blackbox);
+    DeterMath dMath; // Hızlı matematik sınıfımız statiktir, hazırdır.
 
-    // 3. ADIM: Çoklu Çekirdek Simülasyonu (16. Özellik)
-    // Ağır yükü hemen arka çekirdeklere fırlatıyoruz usta!
-    worker.deploy_task_to_background(background_map_loading);
+    // 🏎️ ADIM 3: Kaynak Yükleme ve Çoklu Çekirdek Simülasyonu (16. ve 18. Özellik)
+    bundler.stream_asset_to_ram("BMW_E36_3D_Model.asset");
+    worker.deploy_task_to_background(background_asset_stream);
 
-    // 4. ADIM: Dokunmatik Ekran Girişi (15. Özellik)
-    // Oyuncu ekrana dokunuyor, sinyal anında kuyrukta
-    input.push_hardware_event("TOUCH_DOWN", 450, 920);
-    input.dispatch_next_event();
+    // 🕹️ ADIM 4: Gecikmesiz Giriş ve Ses Patlaması (15. ve 17. Özellik)
+    input.push_hardware_event("TOUCH_DOWN", 500, 1000);
+    audio.play_sound_instant("E36_M50_EGZOZ_SESI.wav");
 
-    // 5. ADIM: İşletim Sistemi Duvarlarını Aşma (13. Özellik)
+    // 🖥️ ADIM 5: Kernel Seviyesi Donanım Bağlantısı (13. Özellik)
     kernel.engage_direct_hardware_access(true);
-    kernel.optimize_cpu_affinity(0); // Oyunu 0. çekirdeğe kelepçeledik
+    kernel.optimize_cpu_affinity(0); // 0. çekirdeğe oyunu kitledik
 
-    // 6. ADIM: NOS Tetikleme Anı! (12. Özellik)
-    // Yarış başladı, oyuncu nitroyu kökledi! Target 120 FPS!
+    // 🚀 ADIM 6: NOS Tetikleme ve Hızlı Matematik (12. ve 20. Özellik)
+    NOSTrigger nos(blackbox);
     nos.trigger_nitro(true);
-    
-    // Grafik sabitleyiciyi 120 FPS hedefine göre güncelle ve koştur (14. Özellik)
-    FramePacer pacerNOS(nos.get_current_fps_target(), blackbox);
-    pacerNOS.pace_frame();
 
-    // 7. ADIM: RİSK VE PATLAMA ANININ SİMÜLASYONU 🔥
-    // İşlemci çok zorlandı ve sıcaklık 90 dereceye fırladı diyelim usta!
-    std::cout << "\n⚠️ [UYARI]: Donanim yuk altinda aci cekiyor..." << std::endl;
-    int hardwareTemp = 90; 
-    
-    // Sistem kararlılığını kontrol et. 85 dereceyi geçtiği için:
-    // Bu fonksiyon KÜT diye Kara Kutunun Panik Şalterini indirecek ve programı kapatacak!
-    nos.check_system_stability(hardwareTemp); 
+    // Efsane hızlı karekök kodumuzu test edelim (Farkı gör usta!)
+    float invSqrtSample = DeterMath::fast_inverse_sqrt(16.0f);
+    std::cout << "[🧮 MATH-TEST]: Hizli karekok sonucu (16 icin): " << invSqrtSample << std::endl;
 
-    // Çekirdek işçilerini temizle (Buraya normal şartlarda ulaşılamayacak çünkü sistem kilitlenecek!)
+    // ⏱️ ADIM 7: Grafik Akıcılığı ve Fizik Hesapları (14. ve 19. Özellik)
+    FramePacer pacer(nos.get_current_fps_target(), blackbox);
+    pacer.pace_frame();
+    physics.solve_collisions(120.5f, 440.2f);
+
+    // 🔥 ADIM 8: PANİK ŞALTERİ VE GÜVENLİK SİMÜLASYONU
+    std::cout << "\n⚠️ [UYARI]: Otobanda hiz limiti asildi, yuksek islemci yuklenmesi..." << std::endl;
+    int currentCpuTemp = 89; // Sıcaklık kritik sınıra vurdu!
+    
+    // Sistem 85 dereceyi geçtiği için kara kutu anında devreye girecek!
+    nos.check_system_stability(currentCpuTemp);
+
+    // Temizlik (Kara kutu sistemi kapatmazsa buraya ulaşır)
     worker.synchronize_workers();
-
     return 0;
 }
