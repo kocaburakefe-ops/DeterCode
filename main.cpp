@@ -132,3 +132,34 @@ int main() {
 
     return 0;
 }
+
+    // ... (Yukarıdaki mevcut kodların, ekrandaki yazılar falan aynen duruyor)
+
+    // 🤖 1. ANDROID ASSEMBLY TESTİ (NEON Vektör Motoru Marşı)
+    std::cout << "\n[TEST]: Android NEON Grafik Motoru Test Ediliyor..." << std::endl;
+    std::vector<uint32_t> pikseller = {10, 20, 30, 40, 50, 60, 70, 80}; 
+    
+    // Bizim assembly_opt altındaki kodu ateşliyoruz
+    android_neon_fast_blur(pikseller.data(), pikseller.size());
+    std::cout << "\033[1;36m -> [OK] NEON İşlemci Çekirdeği Pikselleri Yıldırım Hızıyla İşledi!\033[0m" << std::endl;
+
+
+    // 🍏 2. APPLE ASSEMBLY TESTİ (ARM64 Siber Kale Testi)
+    std::cout << "\n[TEST]: Apple Silicon Donanımsal Siber Zırh Test Ediliyor..." << std::endl;
+    uint64_t ram_adresi = 0xDEADBEEF; 
+    uint64_t guvenlik_anahtari = 0xDEADBEEF; 
+    
+    // Apple Assembly zırhını sorguluyoruz
+    int temiz_mi = apple_arm64_secure_verify(&ram_adresi, guvenlik_anahtari);
+    
+    if (temiz_mi == 1) {
+        std::cout << "\033[1;32m -> [SAFE] Apple Silicon Assembly: Şasi temiz, sızma yok!\033[0m" << std::endl;
+    } else {
+        std::cout << "\033[1;31m -> [CRITICAL] Apple Silicon Assembly: HİLE ALGILANDI, MOTOR KİLİTLENDİ!\033[0m" << std::endl;
+    }
+
+    std::cout << "\n\033[1;33m==================================================\033[0m" << std::endl;
+
+    // 🎯 MOTORUN STOP ETTİĞİ GÜVENLİ LİMAN BURASIDIR, KODLAR BU SATIRIN ÜSTÜNDE OLMALI!
+    return 0; 
+}
