@@ -133,24 +133,27 @@ int main() {
     return 0;
 }
 
-            // ... (Yukarıdaki 1 ve 2. Sütun testleri ile eski kodlar yerinde duruyor)
+         // ... (Yukarıdaki 1, 2 ve 3. Sütun testleri ile eski kodlar yerinde duruyor)
 
     // =========================================================================
-    // 🏛️ IMPERIUM 3. SÜTUN: DONANIMSAL ANTI-DEBUG KALKAN TESTİ
+    // 🏛️ IMPERIUM 4. SÜTUN: SAF MATEMATİK VE HIZLI VEKTÖR TESTİ
     // =========================================================================
-    std::cout << "\n[TEST]: 3. Sutun: Donanimsal Anti-Debug Zirhi Atesleniyor..." << std::endl;
+    std::cout << "\n[TEST]: 4. Sutun: Saf Matematik & Vektor Motoru Atesleniyor..." << std::endl;
     
-    // Assembly 3. Sütun canavarını tam burada sahneye alıyoruz!
-    // Bu fonksiyon çağrıldığı an kernel bizi koruma kalkanına alacak usta.
-    arm64_anti_ptrace_sys();
+    float fizik_vektoru[4] = {1.5f, 2.0f, 3.5f, 4.0f};    // Arabanın anlık hız/ivme şasisi
+    float katsayilar[4] = {2.0f, 2.0f, 2.0f, 2.0f};       // Sürtünme veya yerçekimi çarpanı
+    float vektor_sonuc[4] = {0};                          // Sonuç döküm tavası
 
-    std::cout << "\033[1;33m -> [MARKALASMA]: ARM64 Syscall 26 Tetiklendi. Casus Yazilim Duvari Aktif!\033[0m" << std::endl;
-    std::cout << "\033[1;32m -> [RESULT]: Donanimsal koruma pürüzsüz devreye girdi, izleme engellendi.\033[0m" << std::endl;
+    // 4. Sütun Assembly canavarını tam burada sahneye alıyoruz!
+    arm64_fast_vector_multiply(fizik_vektoru, katsayilar, vektor_sonuc);
+
+    std::cout << "\033[1;34m -> [MARKALASMA]: Donanimsal Vektor Motoru Fizik Hesabini Tek Marşta Ezdi!\033[0m" << std::endl;
+    std::cout << "\033[1;32m -> [RESULT]: Ilk vektor ivmesi basariyla muhlendi: " << vektor_sonuc[0] << "\033[0m" << std::endl;
 
     std::cout << "\n\033[1;33m==================================================\033[0m" << std::endl;
     
     // =========================================================================
-    // 🎯 DÜKKANIN EN ALT PARKI - ŞALTER BURADA İNİYOR!
+    // 🎯 DÜKKANIN KUTSAL KAPANIŞI - ŞALTER BURADA İNİYOR!
     // =========================================================================
     return 0;
-} // <--- DOSYANIN EN SONU!
+} // <--- DOSYANIN EN SONU! BÜYÜK KİLİT!
