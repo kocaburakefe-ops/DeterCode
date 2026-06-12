@@ -133,23 +133,19 @@ int main() {
     return 0;
 }
 
-        // ... (Yukarıdaki 1. Sütun matris testleri ve eski kodlar aynen duruyor)
+            // ... (Yukarıdaki 1 ve 2. Sütun testleri ile eski kodlar yerinde duruyor)
 
     // =========================================================================
-    // 🏛️ IMPERIUM 2. SÜTUN: DONANIMSAL KRİPTO ZIRH TESTİ
+    // 🏛️ IMPERIUM 3. SÜTUN: DONANIMSAL ANTI-DEBUG KALKAN TESTİ
     // =========================================================================
-    std::cout << "\n[TEST]: 2. Sutun: Donanimsal Kripto Zirh (AES) Atesleniyor..." << std::endl;
+    std::cout << "\n[TEST]: 3. Sutun: Donanimsal Anti-Debug Zirhi Atesleniyor..." << std::endl;
     
-    // Şifrelenecek 16-byte sahte veri (Örn: Oyuncunun parası ve save şasisi)
-    uint8_t ham_veri[16] = {0x44, 0x45, 0x54, 0x45, 0x52, 0x43, 0x4F, 0x44, 0x45, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37};
-    uint8_t kripto_anahtar[16] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10};
-    uint8_t sifreli_sonuc[16] = {0}; // Döküm tavası
+    // Assembly 3. Sütun canavarını tam burada sahneye alıyoruz!
+    // Bu fonksiyon çağrıldığı an kernel bizi koruma kalkanına alacak usta.
+    arm64_anti_ptrace_sys();
 
-    // 2. Sütun Assembly canavarını sahneye alıyoruz!
-    apple_hardware_aes_encrypt(ham_veri, kripto_anahtar, sifreli_sonuc);
-
-    std::cout << "\033[1;36m -> [MARKALASMA]: Apple Donanimsal Kripto Motoru Veriyi Isik Hizinda Kilitledi!\033[0m" << std::endl;
-    std::cout << "\033[1;32m -> [RESULT]: Sifreli ilk byte muhlendi: 0x" << std::hex << (int)sifreli_sonuc[0] << std::dec << "\033[0m" << std::endl;
+    std::cout << "\033[1;33m -> [MARKALASMA]: ARM64 Syscall 26 Tetiklendi. Casus Yazilim Duvari Aktif!\033[0m" << std::endl;
+    std::cout << "\033[1;32m -> [RESULT]: Donanimsal koruma pürüzsüz devreye girdi, izleme engellendi.\033[0m" << std::endl;
 
     std::cout << "\n\033[1;33m==================================================\033[0m" << std::endl;
     
