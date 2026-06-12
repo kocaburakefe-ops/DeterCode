@@ -1,7 +1,7 @@
 #include <iostream>
 #include <thread>
 
-// 🛠️ 1 - 30. ÖZELLİKLERİN KÜTÜPHANELERİ
+// 🛠️ 1 - 40. ÖZELLİKLERİN ÇEKİRDEK KÜTÜPHANELERİ
 #include "Core/Diagnostics/blackbox.h"
 #include "Core/Power/nos_trigger.h"
 #include "Core/System/kernel_bridge.h"
@@ -22,8 +22,6 @@
 #include "Core/Editor/ui_renderer.h"
 #include "Core/Editor/memory_profiler.h"
 #include "Core/Security/anti_cheat_hook.h"
-
-// 🛠️ YENİ EKLENEN 31 - 40. ÖZELLİKLERİN KÜTÜPHANELERİ
 #include "Core/Animation/skeletal_animator.h"
 #include "Core/Animation/blend_tree.h"
 #include "Core/Graphics/particle_system.h"
@@ -35,72 +33,71 @@
 #include "Core/FileSystem/vfs_bridge.h"
 #include "Core/Gameplay/scene_manager.h"
 
-int main() {
-    std::cout << "===============================================================" << std::endl;
-    std::cout << "👑 DETERENGINE V1.0 - 40 OZELLIKLI DUNYA IMPARATORLUGU AYAKTA 👑" << std::endl;
-    std::cout << "===============================================================" << std::endl;
+// 🛠️ YENİ EKLENEN 41 - 50. ÖZELLİKLERİN KÜTÜPHANELERİ
+#include "Core/Memory/defragmenter.h"
+#include "Core/Memory/cache_aligner.h"
+#include "Core/Graphics/occlusion_culler.h"
+#include "Core/Graphics/shadow_mapper.h"
+#include "Core/Network/bit_streamer.h"
+#include "Core/AI/navmesh_generator.h"
+#include "Core/QA/automated_tester.h"
+#include "Core/QA/fps_counter.h"
+#include "Core/Audio/doppler_effect.h"
+#include "Core/Cryptography/save_encrypter.h"
 
-    // 🛡️ ALTYAPI VE GÜVENLİK
+int main() {
+    std::cout << "=========================================================================" << std::endl;
+    std::cout << "👑 DETERENGINE V1.0 - 50 OZELLIKLI YARIM ASIRLIK DEV IMPARATORLUK 👑" << std::endl;
+    std::cout << "=========================================================================" << std::endl;
+
+    // 🛡️ ALTYAPI, GÜVENLİK VE GÜVENCE (QA)
     BlackBox blackbox;
     KernelBridge kernel(blackbox);
     ThreadWorker worker(blackbox);
     AntiCheatHook security(blackbox);
-    MemoryProfiler profiler(blackbox);
-    VFSBridge vfs(blackbox);
+    AutomatedTester qaTester(blackbox);
+    FPSCounter fps;
+    SaveEncrypter crypto;
 
-    // 🎨 GRAFİK & SES & GİRİŞ & ANİMASYON
+    // 🧪 50 ÖZELLİK TEST MUAYENESİ (QA)
+    qaTester.run_smoke_tests();
+
+    // 🧠 BELLEK YÖNETİMİ (41, 42)
+    Defragmenter defrag(blackbox);
+    CacheAligner cache;
+    defrag.defragment_heap();
+
+    // 🎨 GRAFİK & DETAYLI GÖLGE KATMANI (43, 44)
     VulkanPipeline vulkan(blackbox);
-    ShaderCompiler compiler(blackbox);
-    FramePacer pacer(60.0, blackbox);
-    ParticleSystem particles(blackbox);
-    PostProcessor postProcess;
-    SkeletalAnimator animator;
-    BlendTree animBlend;
+    OcclusionCuller occlusion;
+    ShadowMapper shadow;
+    vulkan.compile_pipeline_state();
+    shadow.render_shadow_map();
+    occlusion.is_occluded_by_wall(150.0f, 100.0f); // Önündeki binanın arkasında kalanları çizme
 
-    // 🧱 FİZİK & MATEMATİK & YAPAY ZEKÂ & OPTİMİZASYON
-    PhysicsSolver corePhysics(blackbox);
-    RigidBodyWorld worldPhysics(blackbox);
-    RaycastVehicle carPhysics;
-    BehaviorTree aiBrain;
-    PathFinder aiRoute;
-    CrowdManager traffic;
-    FrustumCuller culler;
-    LODManager lod;
+    // 🌐 BİT SEVİYESİNDE NETWORK VE AKUSTİK SES (45, 49)
+    BitStreamer bitNet;
+    DopplerEffect acoustic;
+    bitNet.write_bit(true);
+    bitNet.flush_stream();
+    float pitchShift = acoustic.calculate_pitch_shift(40.0f, 0.0f, 343.0f); // Egzoz sesi fizik kayması
+    std::cout << "[🔊 DOPPLER-SHIFT]: Yanımızdan makas atan botun ses frekansi: " << pitchShift << std::endl;
 
-    // 🌐 NETWORK & UI & GAMEPLAY
-    UDPSocket udp(blackbox);
-    SceneManager scene(blackbox);
+    // 🤖 NAVİGASYON HARİTASI (46)
+    NavMeshGenerator aiNav;
+    aiNav.bake_navigation_mesh();
 
-    std::cout << "\n--- 40 OZELLIKLI DEVASA SISTEM SIMULASYONU ATEŞLENİYOR ---" << std::endl;
-
-    // 🎮 SAHNE DEĞİŞİMİ VE DOSYA OKUMA SİMÜLASYONU (39, 40)
-    scene.switch_scene("Race_Track_01");
-    vfs.read_encrypted_file("Assets/Maps/Track01.pak");
-
-    // 🏃 ANİMASYON VE GRAFİK KATMANI (31, 32, 33, 34)
-    animator.transform_bones("Driver_Model", 1.25f);
-    animBlend.calculate_blend_weight(180.0f, 12.5f);
-    particles.emit_particles(12.0f, 5.0f, 1500); // Nitro dumanı!
-    postProcess.apply_render_effects();
-
-    // ⚙️ OPTİMİZASYON KATMANI (37, 38)
-    if (culler.is_object_visible(50.0f, 0.0f, 120.0f)) {
-        int targetLOD = lod.determine_lod_level(110.0f);
-        std::cout << "[⚙️ LOD-DECISION]: Uzaktaki bina LOD Seviyesi: " << targetLOD << std::endl;
-    }
-
-    // 🤖 GENEL TRAFİK VE DÜNYA FİZİĞİ (35, 36)
-    traffic.update_crowd_avoidance();
-    worldPhysics.simulate_dynamic_objects();
-
-    // 🚀 BÜYÜK MOTORU TETİKLE: NOS MODU! (12)
+    // 🏎️ MOTORU KÖKLE: NITRO VE SİMÜLASYON BİTİŞİ
     NOSTrigger nos(blackbox);
     nos.trigger_nitro(true);
+    fps.log_frame_time(12.3f); // Performans milisaniye kontrolü
 
-    std::cout << "\n===============================================================" << std::endl;
-    std::cout << "🏆 40 OZELLIK TAMAMLANDI: DETERENGINE SEKTÖRE DİZ ÇÖKTÜRMEYE HAZIR! 🏆" << std::endl;
-    std::cout << "===============================================================" << std::endl;
+    // OYUNU GÜVENLİ KAPAT VE VERİLERİ ŞİFRELE (50)
+    crypto.encrypt_player_data("SCORE:99999_GOLD:500000");
+
+    std::cout << "\n=========================================================================" << std::endl;
+    std::cout << "🏆 50 ÖZELLİK BİTTİ: TEZGÂHTA HİÇBİR EKSİK PARÇA KALMADI! REİS ŞAMPİYONDUR! 🏆" << std::endl;
+    std::cout << "=========================================================================" << std::endl;
 
     return 0;
 }
-
