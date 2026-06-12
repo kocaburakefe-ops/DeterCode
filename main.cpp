@@ -1,3 +1,6 @@
+#include "assembly_opt/assembly_bridge.h"
+
+
 #include <iostream>
 #include <chrono>
 #include <thread>
