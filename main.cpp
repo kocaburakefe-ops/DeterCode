@@ -133,26 +133,28 @@ int main() {
     return 0;
 }
 
-         // ... (Eski test kodların, Android blur ve Apple crypto testleri aynen duruyor)
+        // ... (Yukarıdaki 1. Sütun matris testleri ve eski kodlar aynen duruyor)
 
     // =========================================================================
-    // 🏛️ IMPERIUM 1. SÜTUN: ULTRA GRAFİK MATRİS TESTİ
+    // 🏛️ IMPERIUM 2. SÜTUN: DONANIMSAL KRİPTO ZIRH TESTİ
     // =========================================================================
-    std::cout << "\n[TEST]: 1. Sutun: Ultra Grafik Matris Motoru Atesleniyor..." << std::endl;
+    std::cout << "\n[TEST]: 2. Sutun: Donanimsal Kripto Zirh (AES) Atesleniyor..." << std::endl;
     
-    // Simüle edilmiş iki adet 4x4 grafik matrisi (16'şar elemanlı float şasiler)
-    float matrisA[16] = {1.0f, 0.0f, 0.0f, 0.0f,  0.0f, 1.0f, 0.0f, 0.0f,  0.0f, 0.0f, 1.0f, 0.0f,  0.0f, 0.0f, 0.0f, 1.0f};
-    float matrisB[16] = {2.0f, 4.0f, 6.0f, 8.0f,  1.0f, 3.0f, 5.0f, 7.0f,  9.0f, 1.0f, 2.0f, 3.0f,  4.0f, 5.0f, 6.0f, 7.0f};
-    float matrisSonuc[16] = {0}; // Boş döküm tavası, sonuç buraya akacak
+    // Şifrelenecek 16-byte sahte veri (Örn: Oyuncunun parası ve save şasisi)
+    uint8_t ham_veri[16] = {0x44, 0x45, 0x54, 0x45, 0x52, 0x43, 0x4F, 0x44, 0x45, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37};
+    uint8_t kripto_anahtar[16] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10};
+    uint8_t sifreli_sonuc[16] = {0}; // Döküm tavası
 
-    // Assembly 1. Sütun canavarını sahneye alıyoruz!
-    arm64_neon_matrix_multiply(matrisA, matrisB, matrisSonuc);
+    // 2. Sütun Assembly canavarını sahneye alıyoruz!
+    apple_hardware_aes_encrypt(ham_veri, kripto_anahtar, sifreli_sonuc);
 
-    std::cout << "\033[1;35m -> [MARKALASMA]: NEON Matris Motoru 4x4 Grafik Hesabini Tek Marşta Ezdi!\033[0m" << std::endl;
-    std::cout << "\033[1;32m -> [RESULT]: Ilk piksel katsayisi basariyla muhlendi: " << matrisSonuc[0] << "\033[0m" << std::endl;
+    std::cout << "\033[1;36m -> [MARKALASMA]: Apple Donanimsal Kripto Motoru Veriyi Isik Hizinda Kilitledi!\033[0m" << std::endl;
+    std::cout << "\033[1;32m -> [RESULT]: Sifreli ilk byte muhlendi: 0x" << std::hex << (int)sifreli_sonuc[0] << std::dec << "\033[0m" << std::endl;
 
     std::cout << "\n\033[1;33m==================================================\033[0m" << std::endl;
     
-    // DÜKKANIN GÜVENLİ KAPANIŞI
+    // =========================================================================
+    // 🎯 DÜKKANIN EN ALT PARKI - ŞALTER BURADA İNİYOR!
+    // =========================================================================
     return 0;
-}
+} // <--- DOSYANIN EN SONU!
