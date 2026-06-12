@@ -1,7 +1,7 @@
 #include <iostream>
 #include <thread>
 
-// 🛠️ 1 - 20. ÖZELLİKLERİN ÇEKİRDEK KÜTÜPHANELERİ
+// 🛠️ 1 - 30. ÖZELLİKLERİN KÜTÜPHANELERİ
 #include "Core/Diagnostics/blackbox.h"
 #include "Core/Power/nos_trigger.h"
 #include "Core/System/kernel_bridge.h"
@@ -12,8 +12,6 @@
 #include "Core/Resources/asset_bundler.h"
 #include "Core/Physics/physics_solver.h"
 #include "Core/Math/deter_math.h"
-
-// 🛠️ YENİ EKLENEN 21 - 30. ÖZELLİKLERİN KÜTÜPHANELERİ
 #include "Core/Graphics/vulkan_pipeline.h"
 #include "Core/Graphics/shader_compiler.h"
 #include "Core/Network/udp_socket.h"
@@ -25,64 +23,83 @@
 #include "Core/Editor/memory_profiler.h"
 #include "Core/Security/anti_cheat_hook.h"
 
-int main() {
-    std::cout << "==========================================================" << std::endl;
-    std::cout << "👑 DETERENGINE V1.0 - 30 OZELLIKLI DUNYA KUPASI AYAKTA 👑" << std::endl;
-    std::cout << "==========================================================" << std::endl;
+// 🛠️ YENİ EKLENEN 31 - 40. ÖZELLİKLERİN KÜTÜPHANELERİ
+#include "Core/Animation/skeletal_animator.h"
+#include "Core/Animation/blend_tree.h"
+#include "Core/Graphics/particle_system.h"
+#include "Core/Graphics/post_processor.h"
+#include "Core/Physics/rigid_body_world.h"
+#include "Core/AI/crowd_manager.h"
+#include "Core/Optimization/frustum_culler.h"
+#include "Core/Optimization/lod_manager.h"
+#include "Core/FileSystem/vfs_bridge.h"
+#include "Core/Gameplay/scene_manager.h"
 
-    // 🏎️ TEMEL ALTYAPI AYAĞA KALKIYOR
+int main() {
+    std::cout << "===============================================================" << std::endl;
+    std::cout << "👑 DETERENGINE V1.0 - 40 OZELLIKLI DUNYA IMPARATORLUGU AYAKTA 👑" << std::endl;
+    std::cout << "===============================================================" << std::endl;
+
+    // 🛡️ ALTYAPI VE GÜVENLİK
     BlackBox blackbox;
     KernelBridge kernel(blackbox);
     ThreadWorker worker(blackbox);
     AntiCheatHook security(blackbox);
     MemoryProfiler profiler(blackbox);
+    VFSBridge vfs(blackbox);
 
-    // 🎨 GRAFİK & SES & GİRİŞ KATMANI
+    // 🎨 GRAFİK & SES & GİRİŞ & ANİMASYON
     VulkanPipeline vulkan(blackbox);
     ShaderCompiler compiler(blackbox);
     FramePacer pacer(60.0, blackbox);
-    EventDispatcher input(blackbox);
-    AudioMixer audio(blackbox);
+    ParticleSystem particles(blackbox);
+    PostProcessor postProcess;
+    SkeletalAnimator animator;
+    BlendTree animBlend;
 
-    // 🧱 FİZİK & MATEMATİK & YAPAY ZEKÂ KATMANI
+    // 🧱 FİZİK & MATEMATİK & YAPAY ZEKÂ & OPTİMİZASYON
     PhysicsSolver corePhysics(blackbox);
+    RigidBodyWorld worldPhysics(blackbox);
     RaycastVehicle carPhysics;
     BehaviorTree aiBrain;
     PathFinder aiRoute;
-    
-    // 🌐 NETWORK KATMANI
+    CrowdManager traffic;
+    FrustumCuller culler;
+    LODManager lod;
+
+    // 🌐 NETWORK & UI & GAMEPLAY
     UDPSocket udp(blackbox);
-    StateInterpolator lerp;
+    SceneManager scene(blackbox);
 
-    // 🖥️ UI KATMANI
-    UIRenderer ui;
+    std::cout << "\n--- 40 OZELLIKLI DEVASA SISTEM SIMULASYONU ATEŞLENİYOR ---" << std::endl;
 
-    std::cout << "\n--- 30 OZELLIKLI SISTEM SIMULASYONU ATEŞLENİYOR ---" << std::endl;
+    // 🎮 SAHNE DEĞİŞİMİ VE DOSYA OKUMA SİMÜLASYONU (39, 40)
+    scene.switch_scene("Race_Track_01");
+    vfs.read_encrypted_file("Assets/Maps/Track01.pak");
 
-    // Simülasyon Akışı:
-    security.scan_memory_tampering(); // Güvenlik kontrolü
-    vulkan.compile_pipeline_state();  // Grafik hattı açıldı
-    compiler.load_and_compile_shader("BMW_E36_Reflection.glsl"); // Işıklar yandı
+    // 🏃 ANİMASYON VE GRAFİK KATMANI (31, 32, 33, 34)
+    animator.transform_bones("Driver_Model", 1.25f);
+    animBlend.calculate_blend_weight(180.0f, 12.5f);
+    particles.emit_particles(12.0f, 5.0f, 1500); // Nitro dumanı!
+    postProcess.apply_render_effects();
 
-    carPhysics.update_wheel_physics(1.0f); // Asfalt tutuşu sağlandı
-    aiRoute.calculate_optimal_racing_line(1, 45); // Bot rotası çizildi
-    
-    std::string botMove = aiBrain.evaluate_bot_decision(12, true);
-    std::cout << "[🤖 AI-DECISION]: Rakip Botun Hamlesi: " << botMove << std::endl;
+    // ⚙️ OPTİMİZASYON KATMANI (37, 38)
+    if (culler.is_object_visible(50.0f, 0.0f, 120.0f)) {
+        int targetLOD = lod.determine_lod_level(110.0f);
+        std::cout << "[⚙️ LOD-DECISION]: Uzaktaki bina LOD Seviyesi: " << targetLOD << std::endl;
+    }
 
-    float smoothX = lerp.interpolate_position(10.0f, 15.0f, 0.5f); // Ağ interpolasyonu
-    std::cout << "[🌐 NET-UPDATE]: Karsi araba pruzsuz konumu: " << smoothX << std::endl;
+    // 🤖 GENEL TRAFİK VE DÜNYA FİZİĞİ (35, 36)
+    traffic.update_crowd_avoidance();
+    worldPhysics.simulate_dynamic_objects();
 
-    ui.draw_text_hardware("HIZ: 240 KM/H", 50, 50); // Gösterge basıldı
-    profiler.profile_allocated_bytes(256 * 1024 * 1024); // RAM denetlendi
-
-    // Marşı mühürleyen NOS Kapatma/Açma Testi
+    // 🚀 BÜYÜK MOTORU TETİKLE: NOS MODU! (12)
     NOSTrigger nos(blackbox);
     nos.trigger_nitro(true);
 
-    std::cout << "\n==========================================================" << std::endl;
-    std::cout << "🏁 30 OZELLIK TAMAM: DETERENGINE IMPARATORLUGU HAZIR! 🏁" << std::endl;
-    std::cout << "==========================================================" << std::endl;
+    std::cout << "\n===============================================================" << std::endl;
+    std::cout << "🏆 40 OZELLIK TAMAMLANDI: DETERENGINE SEKTÖRE DİZ ÇÖKTÜRMEYE HAZIR! 🏆" << std::endl;
+    std::cout << "===============================================================" << std::endl;
 
     return 0;
 }
