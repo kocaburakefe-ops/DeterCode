@@ -10,9 +10,12 @@ extern "C" {
     // 🍏 Apple Silicon Siber Doğrulama Zırhı (Mevcut)
     int64_t apple_arm64_secure_verify(uint64_t* memoryAddress, uint64_t secureKey);
     
-    // 🔥 1. SÜTUN: Ultra Hızlı Donanımsal 4x4 Matris Çarpımı (YENİ)
-    // float* türünde 16'şar elemanlı 3 adet diziyi işlemci düzeyinde çarpıştırır.
+    // 🔥 1. SÜTUN: Ultra Hızlı Donanımsal 4x4 Matris Çarpımı (Mevcut)
     void arm64_neon_matrix_multiply(const float* matrixA, const float* matrixB, float* matrixResult);
+    
+    // 🛡️ 2. SÜTUN: Apple Silicon Donanımsal AES Şifreleme (YENİ)
+    // 16-byte veriyi, 16-byte anahtar kullanarak donanım düzeyinde şifreler.
+    void apple_hardware_aes_encrypt(const uint8_t* plaintext, const uint8_t* key, uint8_t* ciphertext);
 }
 
 #endif
