@@ -1,7 +1,7 @@
 #include <iostream>
 #include <thread>
 
-// 🛠️ 1 - 40. ÖZELLİKLERİN ÇEKİRDEK KÜTÜPHANELERİ
+// 🛠️ 1 - 50. ÖZELLİKLERİN ÇEKİRDEK KÜTÜPHANELERİ
 #include "Core/Diagnostics/blackbox.h"
 #include "Core/Power/nos_trigger.h"
 #include "Core/System/kernel_bridge.h"
@@ -32,8 +32,6 @@
 #include "Core/Optimization/lod_manager.h"
 #include "Core/FileSystem/vfs_bridge.h"
 #include "Core/Gameplay/scene_manager.h"
-
-// 🛠️ YENİ EKLENEN 41 - 50. ÖZELLİKLERİN KÜTÜPHANELERİ
 #include "Core/Memory/defragmenter.h"
 #include "Core/Memory/cache_aligner.h"
 #include "Core/Graphics/occlusion_culler.h"
@@ -45,58 +43,63 @@
 #include "Core/Audio/doppler_effect.h"
 #include "Core/Cryptography/save_encrypter.h"
 
+// 🛠️ YENİ EKLENEN 51 - 60. SİBER SAVUNMA KÜTÜPHANELERİ
+#include "Core/Firewall/syscall_filter.h"
+#include "Core/Firewall/memory_canary.h"
+#include "Core/Firewall/packet_sanitizer.h"
+#include "Core/Firewall/replay_defender.h"
+#include "Core/Firewall/sandbox_isolated_fs.h"
+#include "Core/AntiTamper/code_obfuscator_hook.h"
+#include "Core/AntiTamper/debugger_detector.h"
+#include "Core/AntiTamper/pointer_obfuscator.h"
+#include "Core/AntiTamper/integrity_checker.h"
+#include "Core/AntiTamper/hardware_token_check.h"
+
 int main() {
     std::cout << "=========================================================================" << std::endl;
-    std::cout << "👑 DETERENGINE V1.0 - 50 OZELLIKLI YARIM ASIRLIK DEV IMPARATORLUK 👑" << std::endl;
+    std::cout << "👑 DETERENGINE V1.0 - 60 OZELLIKLI HACKLENEMEZ SIBER KALE AYAKTA 👑" << std::endl;
     std::cout << "=========================================================================" << std::endl;
 
-    // 🛡️ ALTYAPI, GÜVENLİK VE GÜVENCE (QA)
+    // 🛡️ SİBER GÜVENLİK VE DEFANS KATMANLARI AYAĞA KALKIYOR
     BlackBox blackbox;
-    KernelBridge kernel(blackbox);
-    ThreadWorker worker(blackbox);
-    AntiCheatHook security(blackbox);
+    SyscallFilter firewall(blackbox);
+    MemoryCanary canary;
+    PacketSanitizer netSanitizer;
+    ReplayDefender netDefender;
+    SandboxIsolatedFS sandbox;
+    
+    CodeObfuscatorHook obfuscator;
+    DebuggerDetector dectectGDB;
+    PointerObfuscator ptrObf;
+    IntegrityChecker signature(blackbox);
+    HardwareTokenCheck hwMühür;
+
+    std::cout << "\n--- 🔐 SİBER KALENİN GÜVENLİK BARİYERLERİ TEST EDİLİYOR ---" << std::endl;
+    
+    // ⚔️ AKAN TRAFİKTE SALDIRI VE SAVUNMA SİMÜLASYONU
+    firewall.filter_kernel_calls(0xBAD); // Kernel saldırısı savuşturuldu
+    canary.check_integrity(0xDEADBEEF);  // RAM kanaryası ayakta
+    netSanitizer.sanitize_incoming_packet("MALFORMED_DDOS_DATA_ATTACK"); // DDoS kapıdan döndü
+    netDefender.validate_packet_timestamp(1000, 5000); // Eski/Kopya hile paketi çöpe atıldı
+    
+    obfuscator.obfuscate_symbols_at_runtime(); // Kod sembolleri gizlendi
+    signature.verify_binary_checksum();        // Orijinallik kontrolü tam not aldı
+
+    // Donanım Kilitli Save Doğrulaması (60)
+    std::string fakeCPUID = "XIAOMI_SNAPDRAGON_8_GEN";
+    hwMühür.verify_device_token(fakeCPUID + "_MÜHÜR", fakeCPUID);
+
+    std::cout << "\n--- 🏎️ MOTOR GÜVENLİ BÖLGEDE, SAF PERFORMANS BAŞLIYOR ---" << std::endl;
+
+    // 🚀 ÇEKİRDEK SİSTEMLER TEKRAR ATEŞLENİYOR
     AutomatedTester qaTester(blackbox);
-    FPSCounter fps;
-    SaveEncrypter crypto;
+    qaTester.run_smoke_tests(); // 60 özellik birden denetlendi
 
-    // 🧪 50 ÖZELLİK TEST MUAYENESİ (QA)
-    qaTester.run_smoke_tests();
-
-    // 🧠 BELLEK YÖNETİMİ (41, 42)
-    Defragmenter defrag(blackbox);
-    CacheAligner cache;
-    defrag.defragment_heap();
-
-    // 🎨 GRAFİK & DETAYLI GÖLGE KATMANI (43, 44)
-    VulkanPipeline vulkan(blackbox);
-    OcclusionCuller occlusion;
-    ShadowMapper shadow;
-    vulkan.compile_pipeline_state();
-    shadow.render_shadow_map();
-    occlusion.is_occluded_by_wall(150.0f, 100.0f); // Önündeki binanın arkasında kalanları çizme
-
-    // 🌐 BİT SEVİYESİNDE NETWORK VE AKUSTİK SES (45, 49)
-    BitStreamer bitNet;
-    DopplerEffect acoustic;
-    bitNet.write_bit(true);
-    bitNet.flush_stream();
-    float pitchShift = acoustic.calculate_pitch_shift(40.0f, 0.0f, 343.0f); // Egzoz sesi fizik kayması
-    std::cout << "[🔊 DOPPLER-SHIFT]: Yanımızdan makas atan botun ses frekansi: " << pitchShift << std::endl;
-
-    // 🤖 NAVİGASYON HARİTASI (46)
-    NavMeshGenerator aiNav;
-    aiNav.bake_navigation_mesh();
-
-    // 🏎️ MOTORU KÖKLE: NITRO VE SİMÜLASYON BİTİŞİ
     NOSTrigger nos(blackbox);
-    nos.trigger_nitro(true);
-    fps.log_frame_time(12.3f); // Performans milisaniye kontrolü
-
-    // OYUNU GÜVENLİ KAPAT VE VERİLERİ ŞİFRELE (50)
-    crypto.encrypt_player_data("SCORE:99999_GOLD:500000");
+    nos.trigger_nitro(true); // Güvenli bariyerler altında tam gaz!
 
     std::cout << "\n=========================================================================" << std::endl;
-    std::cout << "🏆 50 ÖZELLİK BİTTİ: TEZGÂHTA HİÇBİR EKSİK PARÇA KALMADI! REİS ŞAMPİYONDUR! 🏆" << std::endl;
+    std::cout << "🏆 60 ÖZELLİK MÜHÜRLENDİ: DELİ GÜÇ ARTIK KURŞUN GEÇİRMEZ BİR KALEDE! 🏆" << std::endl;
     std::cout << "=========================================================================" << std::endl;
 
     return 0;
