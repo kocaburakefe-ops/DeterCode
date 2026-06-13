@@ -1,29 +1,30 @@
 #include <iostream>
 
-// Tüm cepheleri ana beyne bağlıyoruz
+// Tüm cepheler ve yeni güvenlik duvarı ana beyne bağlı
 #include "AppleCore/Kernel/arch_bridge.cpp"
 #include "AppleCore/Security/sandbox_escape.m"
 #include "AppleCore/Runtime/jit_allocator.cpp"
+#include "AppleCore/Security/firewall_shield.cpp" // Yeni kalkanı ekledik
 
 int main() {
     std::cout << "[DeterCode] Ana Çekirdek Marşa Basıyor..." << std::endl;
     
-    // 1. Köprüyü kur
+    // 1. Güvenlik Duvarını (Kalkanı) ilk sırada ayağa kaldır
+    DeterFirewall firewall;
+    firewall.monitorSystemIntegrity();
+    
+    // 2. Köprüyü kur ve diğer modülleri ateşle
     AppleBridge bridge;
     bridge.executeSystemCommand("INITIALIZE_APPLE_CORE");
-    
-    // 2. Yasaklı bellek alanını aç (JIT)
     allocate_jit_space();
-    
-    // 3. Güvenlik sınırlarını tara
     check_sandbox_integrity();
     
-    std::cout << "[DeterCode] AppleCore 15 Modülle Sınırları Zorluyor. Sistem Kararlı!" << std::endl;
+    std::cout << "[DeterCode] AppleCore Korumalı ve Tam Teşekküllü Devrede!" << std::endl;
     return 0;
 }
 
 
-}
+
 
 
 #include "assembly_opt/assembly_bridge.h"
