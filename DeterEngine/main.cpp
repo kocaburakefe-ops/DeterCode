@@ -1,21 +1,28 @@
 #include <iostream>
 
-// AppleCore köprüsünü ana motora dahil ediyoruz
-// (Normalde büyük projelerde .h header dosyaları kullanılır ama mantık budur)
-#include "AppleCore/Kernel/arch_bridge.cpp" 
+// Tüm cepheleri ana beyne bağlıyoruz
+#include "AppleCore/Kernel/arch_bridge.cpp"
+#include "AppleCore/Security/sandbox_escape.m"
+#include "AppleCore/Runtime/jit_allocator.cpp"
 
 int main() {
-    std::cout << "[DeterCode] Ana Çekirdek Başlatılıyor..." << std::endl;
+    std::cout << "[DeterCode] Ana Çekirdek Marşa Basıyor..." << std::endl;
     
-    // AppleCore köprü modülünü çalıştır
-    AppleBridge apple_module;
-    apple_module.executeSystemCommand("ROOT_ACCESS_INIT");
+    // 1. Köprüyü kur
+    AppleBridge bridge;
+    bridge.executeSystemCommand("INITIALIZE_APPLE_CORE");
     
-    std::cout << "[DeterCode] AppleCore modülleri başarıyla ana motora bağlandı. Sistem devrede!" << std::endl;
+    // 2. Yasaklı bellek alanını aç (JIT)
+    allocate_jit_space();
     
-    // ... senin diğer sistem kodların ...
+    // 3. Güvenlik sınırlarını tara
+    check_sandbox_integrity();
     
+    std::cout << "[DeterCode] AppleCore 15 Modülle Sınırları Zorluyor. Sistem Kararlı!" << std::endl;
     return 0;
+}
+
+
 }
 
 
