@@ -1,0 +1,6 @@
+define net_tunnel {
+    protocol: "ENCRYPTED_DETER";
+    target: "EXTERNAL_NODE";
+    masking: "APPLE_IP_HIDE";
+}
+
