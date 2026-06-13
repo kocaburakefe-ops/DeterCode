@@ -1,5 +1,25 @@
-#include "assembly_opt/assembly_bridge.h"
+#include <iostream>
 
+// AppleCore köprüsünü ana motora dahil ediyoruz
+// (Normalde büyük projelerde .h header dosyaları kullanılır ama mantık budur)
+#include "AppleCore/Kernel/arch_bridge.cpp" 
+
+int main() {
+    std::cout << "[DeterCode] Ana Çekirdek Başlatılıyor..." << std::endl;
+    
+    // AppleCore köprü modülünü çalıştır
+    AppleBridge apple_module;
+    apple_module.executeSystemCommand("ROOT_ACCESS_INIT");
+    
+    std::cout << "[DeterCode] AppleCore modülleri başarıyla ana motora bağlandı. Sistem devrede!" << std::endl;
+    
+    // ... senin diğer sistem kodların ...
+    
+    return 0;
+}
+
+
+#include "assembly_opt/assembly_bridge.h"
 
 #include <iostream>
 #include <chrono>
