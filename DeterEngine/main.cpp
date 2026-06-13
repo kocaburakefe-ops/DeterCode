@@ -157,3 +157,25 @@ int main() {
     // =========================================================================
     return 0;
 } // <--- DOSYANIN EN SONU! BÜYÜK KİLİT!
+
+
+#include "iOSEngine.h"
+
+int main() {
+    std::cout << "========================================" << std::endl;
+    std::cout << "     🚀 DETER iOSEngine INITIALIZE 🚀    " << std::endl;
+    std::cout << "========================================" << std::endl;
+
+    iOSEngine appleMotor;
+    
+    // 1. Önce güvenliği ve siber katmanı (Detercode_apple) ayağa kaldırıyoruz
+    appleMotor.deployDetercodeApple();
+    
+    // 2. Sonra donanım optimizasyonunu (AppleCore) ateşliyoruz
+    appleMotor.igniteDeterAppleCore();
+    
+    // 3. En son ikisini birleştirip piyasaya şovumuzu yapıyoruz!
+    appleMotor.unleashFullPerformance();
+
+    return 0;
+}
