@@ -1,0 +1,7 @@
+// DeterCode Native Runtime for Apple
+runtime_init {
+    load_module: "AppleCore";
+    mode: "ROOT_ACCESS";
+    optimize: "FULL_BAREMETAL";
+}
+
