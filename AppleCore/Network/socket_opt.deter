@@ -1,0 +1,7 @@
+define socket_opt {
+    traffic_type: "RAW_STREAM";
+    bypass_proxy: "TRUE";
+    handshake_protocol: "DTR_SECURE_v1";
+    buffer_size: 0x8000;
+}
+
