@@ -1,0 +1,6 @@
+define page_fault_hook {
+    intercept: "KERN_MEMORY_ERROR";
+    action: "FORCE_KEEP_IN_RAM";
+    strategy: "ANTI_SWAP_LOCK";
+}
+
