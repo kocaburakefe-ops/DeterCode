@@ -1,3 +1,6 @@
+#include "DeterApple.h" // Aynı klasörde oldukları için direkt bu şekil kalabilir usta!
+
+
 #ifndef DETER_APPLE_H
 #define DETER_APPLE_H
 
